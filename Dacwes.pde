@@ -5,34 +5,37 @@
 import hypermedia.net.*;
 
 String messages[] = new String[] {
-  "FEEL  THE  PORNJ",
   "DISORIENT",
-  "GRATITUDE",
-  "D*COM",
-  "GET  SOME",
-  "DANCE  BITCH",
-  "COME  AND  GET  IT",
+  "KOSTUME  KULT",
+  "BLACK  LIGHT  BALL"
 };
   
-String hostname = "192.168.1.130";
+String hostname = "127.0.0.1"; //"192.168.1.130";
 String message = "DISORIENT";
 
-int WIDTH = 24;
+int WIDTH = 16;
 int HEIGHT = 8;
+boolean VERTICAL = false;
+
 int FRAMERATE = 30;
 
 int w = -((message.length()-1) * 10 + WIDTH);
 int x = WIDTH;
 PFont font;
-int NUMBER_OF_STARS = 30;
 int ZOOM = 1;
+int NUMBER_OF_STARS = 30;
 Star[] stars;
+
+int NUMBER_OF_BURSTS = 4;
+Burst[] bursts;
+
 byte[] buffer;
 UDP udp;
 long modeFrameStart;
 
 int modes = 10;
 int mode = 0;
+boolean burst_fill = false;
 
 int direction = 1;
 int position = 0;
@@ -50,20 +53,38 @@ void setup() {
     stars[i] = new Star(i*1.0/NUMBER_OF_STARS*ZOOM);
   }
   
+  bursts = new Burst[NUMBER_OF_BURSTS];
+  for (int i = 0; i<NUMBER_OF_BURSTS; i++) {
+    bursts[i] = new Burst();
+  }
+  
+  // init transmit buffer
   buffer = new byte[257];
   buffer[0] = 1;
+  for (int i =  1; i < 257; i++)
+    buffer[i] = 0;
   
   udp = new UDP(this);
   //newMode();
+  
+  smooth();
 }
 
 void newMode() {
+  mode = mode == 1 ? 0 : 1;
+  println("New mode " + mode);
+  
+  if (mode == 0)
+    println("Scrolling " + message);
+  else if (mode == 1)
+    burst_fill = boolean(int(random(1)+0.5));
+
+  /*
   int oldMode = mode;
   while (mode == oldMode) {
     mode = int(random(modes));
-  }
+  }*/
 
-  println("New mode " + mode);
   modeFrameStart = frameCount;
 }
 
@@ -72,7 +93,7 @@ void draw() {
     drawGreetz();
   }
   else if (mode == 1) {
-    drawStars();
+    drawBursts();
   }
   else if (mode == 2) {
     drawFlash();
@@ -111,6 +132,22 @@ void drawGreetz() {
   
   sendDataGreetz();
 }
+
+void drawBursts()
+{
+//  background(0);
+  
+  for (int i=0; i<NUMBER_OF_BURSTS; i++) {
+    bursts[i].draw(burst_fill);
+  }
+
+  if (frameCount - modeFrameStart > FRAMERATE*60) {
+    newMode();
+  }
+  
+  sendData();
+}
+
 
 void drawStars() {
   background(0);
@@ -303,10 +340,14 @@ void sendDataGreetz() {
   
   for (int y=0; y<HEIGHT; y++) {
     for (int x=0; x<WIDTH; x++) {
-      i = y * WIDTH + x;
-      j = x * HEIGHT + y + 1;      
-      r = (pixels[i] >> 16 & 0xFF);
-      buffer[j] = (byte)((r>0) ? 255 : 0);
+      j = y * WIDTH + x;
+      if (VERTICAL)
+        i = x * HEIGHT + y;
+      else
+        i = (x % 8) + floor(x / 8)*8*HEIGHT + y*8;
+      
+      r = (pixels[j] >> 16 & 0xFF);
+      buffer[i+1] = (byte)((r>0) ? 255 : 0);
     }
   }
   
@@ -322,13 +363,17 @@ void sendData() {
   
   for (int y=0; y<HEIGHT; y++) {
     for (int x=0; x<WIDTH; x++) {
-      i = x * HEIGHT + y;
+      if (VERTICAL)
+        i = x * HEIGHT + y;
+      else
+        i = (x % 8) + floor(x / 8)*8*HEIGHT + y*8;
+
       j = (y*ZOOM*(WIDTH*ZOOM))+(x*ZOOM);
       r = (pixels[j] >> 16 & 0xFF);
       
       //if (r>0)
       //  print(r+" ");
-      
+     
       buffer[i+1] = byte(r);
     }
   }
@@ -362,5 +407,46 @@ class Star {
     y = random(HEIGHT*ZOOM);
     //s = random(ZOOM)+1;
     z = int(s/ZOOM*255);
+  }
+}
+
+
+class Burst {
+  float x;
+  float y;
+  float d;
+  float maxd;
+  float speed;
+  int intensity;
+  
+  public Burst()
+  {
+    init();
+  }
+  
+  public void init()
+  {
+    x = random(WIDTH);
+    y = random(HEIGHT);
+    maxd = random(10);
+    speed = random(5)/10 + 0.1;
+    d = 0;
+    intensity = 255;
+  }
+  
+  public void draw(boolean fl)
+  {
+    if (fl)
+      fill(0);
+    else
+      noFill();
+    stroke(intensity);
+    ellipse(x, y, d, d);
+    d+= speed;
+    if (d > maxd)
+      intensity -= 15;
+      
+    if (intensity <= 0)
+      init();
   }
 }
