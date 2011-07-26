@@ -1,8 +1,20 @@
-/**
-* Greetz for the DACWES!
-*/
-
+import processing.opengl.*;
+import java.lang.reflect.Method;
 import hypermedia.net.*;
+
+String[] enabledModes = new String[] {
+    "drawGreetz",
+    "drawBursts",
+//    "drawFlash",
+//    "drawLines",
+//    "drawFader",
+//    "drawCurtain",
+//    "drawVertLine",
+//    "drawSticks",
+//    "drawLinesTheOtherWay",
+//    "drawSpin"
+};
+Method currentModeMethod = null;
 
 String messages[] = new String[] {
   "DISORIENT",
@@ -16,10 +28,11 @@ String message = "DISORIENT";
 int WIDTH = 15;
 int HEIGHT = 16;
 boolean VERTICAL = false;
+int FONT_SIZE = HEIGHT;
 
 int FRAMERATE = 30;
 
-int w = -((message.length()-1) * 10 + WIDTH);
+int w = 0;
 int x = WIDTH;
 PFont font;
 int ZOOM = 1;
@@ -30,8 +43,6 @@ int NUMBER_OF_BURSTS = 4;
 Burst[] bursts;
 
 long modeFrameStart;
-
-int modes = 10;
 int mode = 0;
 boolean burst_fill = false;
 
@@ -41,10 +52,11 @@ int position = 0;
 Dacwes dacwes;
 
 void setup() {
-  size(WIDTH,HEIGHT);
+  // Had to enable OPENGL for some reason new fonts don't work in JAVA2D.
+  size(WIDTH,HEIGHT,OPENGL);
   
-  font = loadFont("Disorient-8.vlw");
-  textFont(font,9);
+  font = loadFont("Disorient-" + FONT_SIZE + ".vlw");
+  textFont(font,FONT_SIZE+1);
   textMode(SCREEN);
   frameRate(FRAMERATE);
   
@@ -61,68 +73,68 @@ void setup() {
   dacwes = new Dacwes(this, WIDTH, HEIGHT);
   dacwes.setAddress(hostname);
   dacwes.setAddressingMode(Dacwes.ADDRESSING_VERTICAL_FLIPFLOP);  
-  //newMode();
+  setMode(0);
   
   smooth();
 }
 
-void newMode() {
-  mode = mode == 1 ? 0 : 1;
-  println("New mode " + mode);
-  
-  if (mode == 0)
-    println("Scrolling " + message);
-  else if (mode == 1)
-    burst_fill = boolean(int(random(1)+0.5));
+void setMode(int newMode) {
+  String methodName = enabledModes[newMode];
 
-  /*
-  int oldMode = mode;
-  while (mode == oldMode) {
-    mode = int(random(modes));
-  }*/
-
+  mode = newMode;
   modeFrameStart = frameCount;
+  println("New mode " + methodName);
+
+  try {
+    currentModeMethod = this.getClass().getDeclaredMethod(methodName,new Class[] {});
+  }
+  catch (Exception e) { e.printStackTrace(); }
+  
+  if (methodName == "drawBursts") {
+      burst_fill = boolean(int(random(1)+0.5));
+  }
+}
+
+void newMode() {
+  int newMode = mode;
+  String methodName;
+  
+  if (enabledModes.length > 1) {
+    while (newMode == mode) {
+      newMode = int(random(enabledModes.length));
+    }
+  }
+  
+  setMode(newMode);
 }
 
 void draw() {
-  if (mode == 0) {
-    drawGreetz();
+  if (currentModeMethod != null) {
+    try {
+      currentModeMethod.invoke(this);
+    }
+    catch (Exception e) { e.printStackTrace(); }
   }
-  else if (mode == 1) {
-    drawBursts();
+  else {
+    println("Current method is null");
   }
-  else if (mode == 2) {
-    drawFlash();
-  }
-  else if (mode == 3) {
-    drawLines();
-  }
-  else if (mode == 4) {
-    drawFader();
-  }
-  else if (mode == 5)
-    drawCurtain();
-  else if (mode == 6)
-    drawVertLine();
-  else if (mode == 7)
-    drawSticks();
-  else if (mode == 8)
-    drawLinesTheOtherWay();
-  else if (mode == 9)
-   drawSpin();
 }
 
 void drawGreetz() {
   background(0);
   fill(255);
 
-  text(message,x,8);
+  if (w == 0) {
+     w = -int((message.length()-1) * (FONT_SIZE*1.25) + WIDTH);
+  }
+  
+  text(message,x,FONT_SIZE);
 
   x = x - 1;
   if (x<w) {
     x = WIDTH;  
     message = messages[int(random(messages.length))];
-    w = -((message.length()-1) * 10 + WIDTH);
+    w = 0;
     newMode();
   }
   
