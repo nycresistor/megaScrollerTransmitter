@@ -13,8 +13,8 @@ String messages[] = new String[] {
 String hostname = "127.0.0.1"; //"192.168.1.130";
 String message = "DISORIENT";
 
-int WIDTH = 16;
-int HEIGHT = 8;
+int WIDTH = 15;
+int HEIGHT = 16;
 boolean VERTICAL = false;
 
 int FRAMERATE = 30;
@@ -29,8 +29,6 @@ Star[] stars;
 int NUMBER_OF_BURSTS = 4;
 Burst[] bursts;
 
-byte[] buffer;
-UDP udp;
 long modeFrameStart;
 
 int modes = 10;
@@ -39,6 +37,8 @@ boolean burst_fill = false;
 
 int direction = 1;
 int position = 0;
+
+Dacwes dacwes;
 
 void setup() {
   size(WIDTH,HEIGHT);
@@ -57,14 +57,10 @@ void setup() {
   for (int i = 0; i<NUMBER_OF_BURSTS; i++) {
     bursts[i] = new Burst();
   }
-  
-  // init transmit buffer
-  buffer = new byte[257];
-  buffer[0] = 1;
-  for (int i =  1; i < 257; i++)
-    buffer[i] = 0;
-  
-  udp = new UDP(this);
+
+  dacwes = new Dacwes(this, WIDTH, HEIGHT);
+  dacwes.setAddress(hostname);
+  dacwes.setAddressingMode(Dacwes.ADDRESSING_VERTICAL_FLIPFLOP);  
   //newMode();
   
   smooth();
@@ -130,7 +126,7 @@ void drawGreetz() {
     newMode();
   }
   
-  sendDataGreetz();
+  dacwes.sendData();
 }
 
 void drawBursts()
@@ -145,7 +141,7 @@ void drawBursts()
     newMode();
   }
   
-  sendData();
+  dacwes.sendData();
 }
 
 
@@ -160,7 +156,7 @@ void drawStars() {
     newMode();
   }
   
-  sendData();
+  dacwes.sendData();
 }
 
 void drawFlash() {
@@ -177,7 +173,7 @@ void drawFlash() {
     newMode();
   }
   
-  sendData();
+  dacwes.sendData();
 }
 
 void drawLines() {
@@ -195,7 +191,7 @@ void drawLines() {
     newMode();
   }
   
-  sendData();
+  dacwes.sendData();
 }
 
 void drawLinesTheOtherWay() {
@@ -213,7 +209,7 @@ void drawLinesTheOtherWay() {
     newMode();
   }
   
-  sendData();
+  dacwes.sendData();
 }
 
 void drawVertLine() {
@@ -243,7 +239,7 @@ void drawVertLine() {
     newMode();
   }
   
-  sendData();
+  dacwes.sendData();
 }
 
 void drawFader() {
@@ -264,7 +260,7 @@ void drawFader() {
     newMode();
   }
   
-  sendData();
+  dacwes.sendData();
 }
 
 void drawSticks() 
@@ -288,7 +284,7 @@ void drawSticks()
     line(WIDTH-step, y+1, WIDTH, y+1); 
   }
   
-  sendData();
+  dacwes.sendData();
   
   if (frame >= WIDTH*6)
     newMode();
@@ -309,7 +305,7 @@ void drawCurtain()
     newMode();
   }
   
-  sendData();  
+  dacwes.sendData();  
 }
 
 void drawSpin() 
@@ -325,60 +321,10 @@ void drawSpin()
   else
     line(0, HEIGHT-(step-WIDTH+1)-1, WIDTH, step-WIDTH+1); 
   
-  sendData();
+  dacwes.sendData();
   
   if (frame >= (WIDTH+HEIGHT-2)*10)
     newMode();
-}
-
-void sendDataGreetz() {
-  int r;
-  int i;
-  int j;
-
-  loadPixels();
-  
-  for (int y=0; y<HEIGHT; y++) {
-    for (int x=0; x<WIDTH; x++) {
-      j = y * WIDTH + x;
-      if (VERTICAL)
-        i = x * HEIGHT + y;
-      else
-        i = (x % 8) + floor(x / 8)*8*HEIGHT + y*8;
-      
-      r = (pixels[j] >> 16 & 0xFF);
-      buffer[i+1] = (byte)((r>0) ? 255 : 0);
-    }
-  }
-  
-  udp.send(buffer,hostname,58082);
-}
-
-void sendData() {
-  int r;
-  int i;
-  int j=0;
-  
-  loadPixels();
-  
-  for (int y=0; y<HEIGHT; y++) {
-    for (int x=0; x<WIDTH; x++) {
-      if (VERTICAL)
-        i = x * HEIGHT + y;
-      else
-        i = (x % 8) + floor(x / 8)*8*HEIGHT + y*8;
-
-      j = (y*ZOOM*(WIDTH*ZOOM))+(x*ZOOM);
-      r = (pixels[j] >> 16 & 0xFF);
-      
-      //if (r>0)
-      //  print(r+" ");
-     
-      buffer[i+1] = byte(r);
-    }
-  }
-
-  udp.send(buffer,hostname,58082);
 }
 
 class Star {
