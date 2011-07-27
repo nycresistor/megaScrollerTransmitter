@@ -1,10 +1,18 @@
 import processing.opengl.*;
 import java.lang.reflect.Method;
 import hypermedia.net.*;
+import java.io.*;
+
+int WIDTH = 15;
+int HEIGHT = 16;
+boolean VERTICAL = false;
+int FONT_SIZE = HEIGHT;
+int FRAMERATE = 30;
+String hostname = "127.0.0.1"; //"192.168.1.130";
 
 String[] enabledModes = new String[] {
-    "drawGreetz",
-    "drawBursts",
+//    "drawGreetz",
+//    "drawBursts",
 //    "drawFlash",
 //    "drawLines",
 //    "drawFader",
@@ -12,25 +20,22 @@ String[] enabledModes = new String[] {
 //    "drawVertLine",
 //    "drawSticks",
 //    "drawLinesTheOtherWay",
-//    "drawSpin"
+//  "drawSpin",
+      "drawAnimation"
 };
-Method currentModeMethod = null;
 
 String messages[] = new String[] {
   "DISORIENT",
   "KOSTUME  KULT",
   "BLACK  LIGHT  BALL"
-};
-  
-String hostname = "127.0.0.1"; //"192.168.1.130";
+};  
 String message = "DISORIENT";
 
-int WIDTH = 15;
-int HEIGHT = 16;
-boolean VERTICAL = false;
-int FONT_SIZE = HEIGHT;
-
-int FRAMERATE = 30;
+String[] enabledAnimations = new String[] {
+  "anim-heart"
+};
+Animation[] animations;
+int currentAnimation = 0;
 
 int w = 0;
 int x = WIDTH;
@@ -48,16 +53,17 @@ boolean burst_fill = false;
 
 int direction = 1;
 int position = 0;
+Method currentModeMethod = null;
 
 Dacwes dacwes;
 
 void setup() {
   // Had to enable OPENGL for some reason new fonts don't work in JAVA2D.
-  size(WIDTH,HEIGHT,OPENGL);
+  size(WIDTH,HEIGHT);
   
   font = loadFont("Disorient-" + FONT_SIZE + ".vlw");
-  textFont(font,FONT_SIZE+1);
-  textMode(SCREEN);
+  textFont(font,FONT_SIZE);
+  textMode(MODEL);
   frameRate(FRAMERATE);
   
   stars = new Star[NUMBER_OF_STARS];
@@ -73,8 +79,15 @@ void setup() {
   dacwes = new Dacwes(this, WIDTH, HEIGHT);
   dacwes.setAddress(hostname);
   dacwes.setAddressingMode(Dacwes.ADDRESSING_VERTICAL_FLIPFLOP);  
-  setMode(0);
-  
+ 
+  if (enabledAnimations.length > 0) {
+    animations = new Animation[enabledAnimations.length];
+    for (int i=0; i<enabledAnimations.length; i++) {
+      animations[i] = new Animation(enabledAnimations[i],4);
+    }
+  }
+
+  setMode(0);  
   smooth();
 }
 
@@ -90,9 +103,15 @@ void setMode(int newMode) {
   }
   catch (Exception e) { e.printStackTrace(); }
   
+  // TODO Abstract this into init methods.
   if (methodName == "drawBursts") {
       burst_fill = boolean(int(random(1)+0.5));
   }
+  else if (methodName == "drawAnimation") {
+    currentAnimation = int(random(animations.length));
+    println("Animation set to " + enabledAnimations[currentAnimation]);
+  }
+  
 }
 
 void newMode() {
@@ -130,7 +149,10 @@ void drawGreetz() {
   
   text(message,x,FONT_SIZE);
 
-  x = x - 1;
+  if (frameCount % 2 == 0) {
+    x = x - 1;
+  }
+  
   if (x<w) {
     x = WIDTH;  
     message = messages[int(random(messages.length))];
@@ -339,6 +361,27 @@ void drawSpin()
     newMode();
 }
 
+void drawAnimation() {
+  boolean done = animations[currentAnimation].draw();
+  dacwes.sendData();
+  
+  if (done) { 
+    newMode(); 
+    background(0);
+  }
+}
+
+
+/**
+ *
+ *
+ * =================================================================================================================================
+ * =================================================================================================================================
+ * =================================================================================================================================
+ *
+ *
+ **/
+
 class Star {
   float x;
   float y;
@@ -367,7 +410,6 @@ class Star {
     z = int(s/ZOOM*255);
   }
 }
-
 
 class Burst {
   float x;
@@ -406,5 +448,44 @@ class Burst {
       
     if (intensity <= 0)
       init();
+  }
+}
+
+class Animation {
+  public PImage[] frames;
+  public int frameNumber;
+  int frameDivider;
+  
+  public Animation(String name, int frameDivider) {
+    this.frameNumber = 0;
+    this.frameDivider = frameDivider;
+    this.load(name);
+  }
+  
+  public void load(String name) {
+    File dir = new File(savePath("data/" + name));
+    String[] list = dir.list();
+    
+    frames = new PImage[list.length];
+    for (int i=0; i<frames.length; i++) {
+       println("Loading " + name + "/frame" + (i+1) + ".png");
+       frames[i] = loadImage(name + "/frame" + (i+1) + ".png");
+       frames[i].filter(INVERT);
+    }
+  }
+  
+  public boolean draw() {
+    if (frameCount % frameDivider == 0) {
+      frameNumber++;
+      if (frameNumber >= frames.length) {
+        
+        frameNumber = 0;
+        return true;
+      }
+      
+      image(frames[frameNumber],0,0,WIDTH,HEIGHT);
+    }
+    
+    return false;
   }
 }
