@@ -11,8 +11,8 @@ int FRAMERATE = 30;
 String hostname = "127.0.0.1"; //"192.168.1.130";
 
 String[] enabledModes = new String[] {
-//    "drawGreetz",
-//    "drawBursts",
+    "drawGreetz",
+    "drawBursts",
 //    "drawFlash",
 //    "drawLines",
 //    "drawFader",
@@ -20,14 +20,16 @@ String[] enabledModes = new String[] {
 //    "drawVertLine",
 //    "drawSticks",
 //    "drawLinesTheOtherWay",
-//  "drawSpin",
-      "drawAnimation"
+      "drawSpin",
+      "drawAnimation",
+      "drawWaves"
 };
 
 String messages[] = new String[] {
   "DISORIENT",
-  "KOSTUME  KULT",
-  "BLACK  LIGHT  BALL"
+//  "KOSTUME  KULT",
+//  "BLACK  LIGHT  BALL"
+  "COUNTRY  CLUB"
 };  
 String message = "DISORIENT";
 
@@ -56,6 +58,9 @@ int position = 0;
 Method currentModeMethod = null;
 
 Dacwes dacwes;
+
+int NUMBER_OF_WAVES = 4;
+Wave[] waves;
 
 void setup() {
   // Had to enable OPENGL for some reason new fonts don't work in JAVA2D.
@@ -86,7 +91,14 @@ void setup() {
       animations[i] = new Animation(enabledAnimations[i],4);
     }
   }
-
+  
+  if (NUMBER_OF_WAVES > 0) {
+    waves = new Wave[NUMBER_OF_WAVES];
+    for (int i=0; i<NUMBER_OF_WAVES; i++) {
+      waves[i] = new Wave();
+    }
+  }
+  
   setMode(0);  
   smooth();
 }
@@ -371,6 +383,23 @@ void drawAnimation() {
   }
 }
 
+void drawWaves() {
+  background(0);
+  for (int i=0; i<NUMBER_OF_WAVES; i++) {
+    waves[i].draw();
+  }
+  
+  dacwes.sendData();
+  
+  long frame = frameCount - modeFrameStart;
+  if (frame > frameRate*20) {
+    for (int i=0; i<NUMBER_OF_WAVES; i++) {
+      waves[i].init();
+    }
+    
+    newMode();
+  }
+}
 
 /**
  *
@@ -489,3 +518,57 @@ class Animation {
     return false;
   }
 }
+
+class Wave {
+    private float a;
+    private float f;
+    private float r;
+    private int y;
+    private boolean t;
+    private float s;
+    
+    PGraphics g;
+    
+    public Wave() {
+      init();
+      
+      g = createGraphics(WIDTH,HEIGHT,P2D);
+    }
+    
+    public void init() {
+      r = random(TWO_PI);
+      f = PI/32 + random(PI/32);
+      a = HEIGHT/4 + random(HEIGHT/3);
+      y = HEIGHT/8 + int(random(HEIGHT - HEIGHT/8));
+      s = PI/128 + random(PI/64);
+      
+      if (random(10)<5) { s = -s; }
+    }
+    
+    public void draw() {
+      float step;
+      float h;
+      
+      r = r + s;
+      if (r > TWO_PI) r = r - TWO_PI;
+      
+      step = r;
+      
+      g.beginDraw();
+      g.background(0);
+      g.stroke(100);
+      
+      for (int x=0; x<WIDTH; x++) {
+         h = sin(step) * a;
+         step = step + f;          
+         g.line(x,y,x,y+h);
+      }
+      
+      g.endDraw();
+      
+      blend(g,0,0,WIDTH,HEIGHT,0,0,WIDTH,HEIGHT,SCREEN);
+    }
+}    
+    
+    
+    
