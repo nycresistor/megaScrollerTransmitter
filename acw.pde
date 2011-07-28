@@ -9,6 +9,7 @@ boolean VERTICAL = false;
 int FONT_SIZE = HEIGHT;
 int FRAMERATE = 30;
 String hostname = "127.0.0.1"; //"192.168.1.130";
+int TYPICAL_MODE_TIME = 30;
 
 String[] enabledModes = new String[] {
     "drawGreetz",
@@ -62,6 +63,10 @@ Dacwes dacwes;
 int NUMBER_OF_WAVES = 4;
 Wave[] waves;
 
+PGraphics fadeLayer;
+int fadeOutFrames = 0;
+int fadeInFrames = 0;
+
 void setup() {
   // Had to enable OPENGL for some reason new fonts don't work in JAVA2D.
   size(WIDTH,HEIGHT);
@@ -100,7 +105,18 @@ void setup() {
   }
   
   setMode(0);  
+  
+  
   smooth();
+}
+
+void setFadeLayer(int g) {
+  fadeLayer = createGraphics(WIDTH,HEIGHT,P2D);
+  fadeLayer.beginDraw();
+  fadeLayer.stroke(g);
+  fadeLayer.fill(g);
+  fadeLayer.rect(0,0,WIDTH,HEIGHT);
+  fadeLayer.endDraw();  
 }
 
 void setMode(int newMode) {
@@ -123,13 +139,14 @@ void setMode(int newMode) {
     currentAnimation = int(random(animations.length));
     println("Animation set to " + enabledAnimations[currentAnimation]);
   }
-  
 }
 
 void newMode() {
   int newMode = mode;
   String methodName;
-  
+ 
+  fadeOutFrames = FRAMERATE;
+  setFadeLayer(240);
   if (enabledModes.length > 1) {
     while (newMode == mode) {
       newMode = int(random(enabledModes.length));
@@ -140,7 +157,15 @@ void newMode() {
 }
 
 void draw() {
-  if (currentModeMethod != null) {
+  if (fadeOutFrames > 0) {
+    fadeOutFrames--;
+    blend(fadeLayer,0,0,WIDTH,HEIGHT,0,0,WIDTH,HEIGHT,MULTIPLY);
+    
+    if (fadeOutFrames == 0) {
+      fadeInFrames = FRAMERATE;
+    }
+  }
+  else if (currentModeMethod != null) {
     try {
       currentModeMethod.invoke(this);
     }
@@ -149,6 +174,14 @@ void draw() {
   else {
     println("Current method is null");
   }
+
+  if (fadeInFrames > 0) {
+    setFadeLayer(240 - fadeInFrames*8);
+    blend(fadeLayer,0,0,WIDTH,HEIGHT,0,0,WIDTH,HEIGHT,MULTIPLY);
+    fadeInFrames--;
+  }
+  
+  dacwes.sendData();
 }
 
 void drawGreetz() {
@@ -156,7 +189,7 @@ void drawGreetz() {
   fill(255);
 
   if (w == 0) {
-     w = -int((message.length()-1) * (FONT_SIZE*1.25) + WIDTH);
+     w = -int((message.length()-1) * (FONT_SIZE*1.35) + WIDTH);
   }
   
   text(message,x,FONT_SIZE);
@@ -171,8 +204,6 @@ void drawGreetz() {
     w = 0;
     newMode();
   }
-  
-  dacwes.sendData();
 }
 
 void drawBursts()
@@ -183,11 +214,9 @@ void drawBursts()
     bursts[i].draw(burst_fill);
   }
 
-  if (frameCount - modeFrameStart > FRAMERATE*60) {
+  if (frameCount - modeFrameStart > FRAMERATE*TYPICAL_MODE_TIME) {
     newMode();
   }
-  
-  dacwes.sendData();
 }
 
 
@@ -198,11 +227,9 @@ void drawStars() {
     stars[i].draw();
   }
   
-  if (frameCount - modeFrameStart > FRAMERATE*10) {
+  if (frameCount - modeFrameStart > FRAMERATE*TYPICAL_MODE_TIME) {
     newMode();
   }
-  
-  dacwes.sendData();
 }
 
 void drawFlash() {
@@ -215,11 +242,9 @@ void drawFlash() {
     background(0);
   }
   
-  if (frame > FRAMERATE*1) {
+  if (frame > FRAMERATE*TYPICAL_MODE_TIME) {
     newMode();
   }
-  
-  dacwes.sendData();
 }
 
 void drawLines() {
@@ -233,11 +258,9 @@ void drawLines() {
     line(i,0,i+8,8);
   }
   
-  if (frame > FRAMERATE*5) {
+  if (frame > FRAMERATE*TYPICAL_MODE_TIME) {
     newMode();
   }
-  
-  dacwes.sendData();
 }
 
 void drawLinesTheOtherWay() {
@@ -254,8 +277,6 @@ void drawLinesTheOtherWay() {
   if (frame > FRAMERATE*5) {
     newMode();
   }
-  
-  dacwes.sendData();
 }
 
 void drawVertLine() {
@@ -281,11 +302,9 @@ void drawVertLine() {
   
   line(position,0,position,HEIGHT-1);
   
-  if (frame > FRAMERATE*20) {
+  if (frame > FRAMERATE*TYPICAL_MODE_TIME) {
     newMode();
   }
-  
-  dacwes.sendData();
 }
 
 void drawFader() {
@@ -305,8 +324,6 @@ void drawFader() {
   else {
     newMode();
   }
-  
-  dacwes.sendData();
 }
 
 void drawSticks() 
@@ -330,8 +347,6 @@ void drawSticks()
     line(WIDTH-step, y+1, WIDTH, y+1); 
   }
   
-  dacwes.sendData();
-  
   if (frame >= WIDTH*6)
     newMode();
 }
@@ -350,8 +365,6 @@ void drawCurtain()
   if (frame > WIDTH*4) {
     newMode();
   }
-  
-  dacwes.sendData();  
 }
 
 void drawSpin() 
@@ -367,15 +380,12 @@ void drawSpin()
   else
     line(0, HEIGHT-(step-WIDTH+1)-1, WIDTH, step-WIDTH+1); 
   
-  dacwes.sendData();
-  
   if (frame >= (WIDTH+HEIGHT-2)*10)
     newMode();
 }
 
 void drawAnimation() {
   boolean done = animations[currentAnimation].draw();
-  dacwes.sendData();
   
   if (done) { 
     newMode(); 
@@ -389,10 +399,8 @@ void drawWaves() {
     waves[i].draw();
   }
   
-  dacwes.sendData();
-  
   long frame = frameCount - modeFrameStart;
-  if (frame > frameRate*20) {
+  if (frame > frameRate*TYPICAL_MODE_TIME) {
     for (int i=0; i<NUMBER_OF_WAVES; i++) {
       waves[i].init();
     }
@@ -538,7 +546,7 @@ class Wave {
     public void init() {
       r = random(TWO_PI);
       f = PI/32 + random(PI/32);
-      a = HEIGHT/4 + random(HEIGHT/3);
+      a = HEIGHT/3 + random(HEIGHT/3);
       y = HEIGHT/8 + int(random(HEIGHT - HEIGHT/8));
       s = PI/128 + random(PI/64);
       
