@@ -1,35 +1,39 @@
+import processing.video.*;
+import codeanticode.gsvideo.*;
 import processing.opengl.*;
 import java.lang.reflect.Method;
 import hypermedia.net.*;
 import java.io.*;
 
-int WIDTH = 15;
+int WIDTH = 16;
 int HEIGHT = 16;
 boolean VERTICAL = false;
 int FONT_SIZE = HEIGHT;
 int FRAMERATE = 30;
 String hostname = "127.0.0.1"; //"192.168.1.130";
 int TYPICAL_MODE_TIME = 30;
+boolean USE_GSMOVIE = false;
 
 String[] enabledModes = new String[] {
-    "drawGreetz",
-    "drawBursts",
-//    "drawFlash",
-//    "drawLines",
-//    "drawFader",
-//    "drawCurtain",
-//    "drawVertLine",
-//    "drawSticks",
-//    "drawLinesTheOtherWay",
-      "drawSpin",
-      "drawAnimation",
-      "drawWaves"
+  //    "drawGreetz",
+  //    "drawBursts",
+  //    "drawFlash",
+  //    "drawLines",
+  //    "drawFader",
+  //    "drawCurtain",
+  //    "drawVertLine",
+  //    "drawSticks",
+  //    "drawLinesTheOtherWay",
+  //    "drawSpin",
+  //    "drawAnimation",
+  //    "drawWaves",
+  "drawMovie"
 };
 
 String messages[] = new String[] {
-  "DISORIENT",
-//  "KOSTUME  KULT",
-//  "BLACK  LIGHT  BALL"
+  "DISORIENT", 
+  //  "KOSTUME  KULT",
+  //  "BLACK  LIGHT  BALL"
   "COUNTRY  CLUB"
 };  
 String message = "DISORIENT";
@@ -69,18 +73,18 @@ int fadeInFrames = 0;
 
 void setup() {
   // Had to enable OPENGL for some reason new fonts don't work in JAVA2D.
-  size(WIDTH,HEIGHT);
-  
+  size(WIDTH, HEIGHT);
+
   font = loadFont("Disorient-" + FONT_SIZE + ".vlw");
-  textFont(font,FONT_SIZE);
+  textFont(font, FONT_SIZE);
   textMode(MODEL);
   frameRate(FRAMERATE);
-  
+
   stars = new Star[NUMBER_OF_STARS];
   for (int i=0; i<NUMBER_OF_STARS; i++) {
     stars[i] = new Star(i*1.0/NUMBER_OF_STARS*ZOOM);
   }
-  
+
   bursts = new Burst[NUMBER_OF_BURSTS];
   for (int i = 0; i<NUMBER_OF_BURSTS; i++) {
     bursts[i] = new Burst();
@@ -89,34 +93,34 @@ void setup() {
   dacwes = new Dacwes(this, WIDTH, HEIGHT);
   dacwes.setAddress(hostname);
   dacwes.setAddressingMode(Dacwes.ADDRESSING_VERTICAL_FLIPFLOP);  
- 
+
   if (enabledAnimations.length > 0) {
     animations = new Animation[enabledAnimations.length];
     for (int i=0; i<enabledAnimations.length; i++) {
-      animations[i] = new Animation(enabledAnimations[i],4);
+      animations[i] = new Animation(enabledAnimations[i], 4);
     }
   }
-  
+
   if (NUMBER_OF_WAVES > 0) {
     waves = new Wave[NUMBER_OF_WAVES];
     for (int i=0; i<NUMBER_OF_WAVES; i++) {
       waves[i] = new Wave();
     }
   }
-  
+
   setMode(0);  
-  
-  
+
+
   smooth();
 }
 
 void setFadeLayer(int g) {
-  fadeLayer = createGraphics(WIDTH,HEIGHT,P2D);
+  fadeLayer = createGraphics(WIDTH, HEIGHT, P2D);
   fadeLayer.beginDraw();
   fadeLayer.stroke(g);
   fadeLayer.fill(g);
-  fadeLayer.rect(0,0,WIDTH,HEIGHT);
-  fadeLayer.endDraw();  
+  fadeLayer.rect(0, 0, WIDTH, HEIGHT);
+  fadeLayer.endDraw();
 }
 
 void setMode(int newMode) {
@@ -127,13 +131,17 @@ void setMode(int newMode) {
   println("New mode " + methodName);
 
   try {
-    currentModeMethod = this.getClass().getDeclaredMethod(methodName,new Class[] {});
+    currentModeMethod = this.getClass().getDeclaredMethod(methodName, new Class[] {
+    }
+    );
   }
-  catch (Exception e) { e.printStackTrace(); }
-  
+  catch (Exception e) { 
+    e.printStackTrace();
+  }
+
   // TODO Abstract this into init methods.
   if (methodName == "drawBursts") {
-      burst_fill = boolean(int(random(1)+0.5));
+    burst_fill = boolean(int(random(1)+0.5));
   }
   else if (methodName == "drawAnimation") {
     currentAnimation = int(random(animations.length));
@@ -144,7 +152,7 @@ void setMode(int newMode) {
 void newMode() {
   int newMode = mode;
   String methodName;
- 
+
   fadeOutFrames = FRAMERATE;
   setFadeLayer(240);
   if (enabledModes.length > 1) {
@@ -152,15 +160,15 @@ void newMode() {
       newMode = int(random(enabledModes.length));
     }
   }
-  
+
   setMode(newMode);
 }
 
 void draw() {
   if (fadeOutFrames > 0) {
     fadeOutFrames--;
-    blend(fadeLayer,0,0,WIDTH,HEIGHT,0,0,WIDTH,HEIGHT,MULTIPLY);
-    
+    blend(fadeLayer, 0, 0, WIDTH, HEIGHT, 0, 0, WIDTH, HEIGHT, MULTIPLY);
+
     if (fadeOutFrames == 0) {
       fadeInFrames = FRAMERATE;
     }
@@ -169,7 +177,9 @@ void draw() {
     try {
       currentModeMethod.invoke(this);
     }
-    catch (Exception e) { e.printStackTrace(); }
+    catch (Exception e) { 
+      e.printStackTrace();
+    }
   }
   else {
     println("Current method is null");
@@ -177,10 +187,10 @@ void draw() {
 
   if (fadeInFrames > 0) {
     setFadeLayer(240 - fadeInFrames*8);
-    blend(fadeLayer,0,0,WIDTH,HEIGHT,0,0,WIDTH,HEIGHT,MULTIPLY);
+    blend(fadeLayer, 0, 0, WIDTH, HEIGHT, 0, 0, WIDTH, HEIGHT, MULTIPLY);
     fadeInFrames--;
   }
-  
+
   dacwes.sendData();
 }
 
@@ -189,15 +199,15 @@ void drawGreetz() {
   fill(255);
 
   if (w == 0) {
-     w = -int((message.length()-1) * (FONT_SIZE*1.35) + WIDTH);
+    w = -int((message.length()-1) * (FONT_SIZE*1.35) + WIDTH);
   }
-  
-  text(message,x,FONT_SIZE);
+
+  text(message, x, FONT_SIZE);
 
   if (frameCount % 2 == 0) {
     x = x - 1;
   }
-  
+
   if (x<w) {
     x = WIDTH;  
     message = messages[int(random(messages.length))];
@@ -208,8 +218,8 @@ void drawGreetz() {
 
 void drawBursts()
 {
-//  background(0);
-  
+  //  background(0);
+
   for (int i=0; i<NUMBER_OF_BURSTS; i++) {
     bursts[i].draw(burst_fill);
   }
@@ -222,11 +232,11 @@ void drawBursts()
 
 void drawStars() {
   background(0);
-  
+
   for (int i=0; i<NUMBER_OF_STARS; i++) {
     stars[i].draw();
   }
-  
+
   if (frameCount - modeFrameStart > FRAMERATE*TYPICAL_MODE_TIME) {
     newMode();
   }
@@ -234,14 +244,14 @@ void drawStars() {
 
 void drawFlash() {
   long frame = frameCount - modeFrameStart;
-  
+
   if (frame % (FRAMERATE/5) < 1) {
     background(255);
   }
   else {
     background(0);
   }
-  
+
   if (frame > FRAMERATE*TYPICAL_MODE_TIME) {
     newMode();
   }
@@ -250,14 +260,14 @@ void drawFlash() {
 void drawLines() {
   background(0);
   stroke(255);
-  
+
   long frame = frameCount - modeFrameStart;
   int x = int(frame % 5);
-  
+
   for (int i = -x; i<WIDTH; i+=5) {
-    line(i,0,i+8,8);
+    line(i, 0, i+8, 8);
   }
-  
+
   if (frame > FRAMERATE*TYPICAL_MODE_TIME) {
     newMode();
   }
@@ -266,14 +276,14 @@ void drawLines() {
 void drawLinesTheOtherWay() {
   background(0);
   stroke(255);
-  
+
   long frame = frameCount - modeFrameStart;
   int x = int(frame % 5);
-  
+
   for (int i = x-5; i<WIDTH; i+=5) {
-    line(i+8,0,i,8);
+    line(i+8, 0, i, 8);
   }
-  
+
   if (frame > FRAMERATE*5) {
     newMode();
   }
@@ -282,12 +292,12 @@ void drawLinesTheOtherWay() {
 void drawVertLine() {
   background(0);
   stroke(255);
-  
+
   long frame = frameCount - modeFrameStart;
 
   if (int(random(10)) == 0)
     direction = -direction;
-    
+
   position += direction;
   if (position < 0)
   {
@@ -299,9 +309,9 @@ void drawVertLine() {
     direction = -1;
     position = WIDTH-1;
   }
-  
-  line(position,0,position,HEIGHT-1);
-  
+
+  line(position, 0, position, HEIGHT-1);
+
   if (frame > FRAMERATE*TYPICAL_MODE_TIME) {
     newMode();
   }
@@ -330,7 +340,7 @@ void drawSticks()
 {  
   int frame = int(frameCount - modeFrameStart);
   int step = frame % WIDTH;
-  
+
   if ((frame / WIDTH) % 2 == 0)
   {
     background(0);
@@ -341,12 +351,12 @@ void drawSticks()
     background(255);
     stroke(0);
   }
-  
+
   for (int y = 0; y < HEIGHT; y+=2) {
-    line(0,          y,   step,  y);
-    line(WIDTH-step, y+1, WIDTH, y+1); 
+    line(0, y, step, y);
+    line(WIDTH-step, y+1, WIDTH, y+1);
   }
-  
+
   if (frame >= WIDTH*6)
     newMode();
 }
@@ -355,13 +365,13 @@ void drawCurtain()
 {
   background(0);
   stroke(255);
-  
+
   int frame = int(frameCount - modeFrameStart);
   int step = frame % (WIDTH/2);
 
-  line(step,         0, step,         HEIGHT-1);
+  line(step, 0, step, HEIGHT-1);
   line(WIDTH-step-1, 0, WIDTH-step-1, HEIGHT-1);
-  
+
   if (frame > WIDTH*4) {
     newMode();
   }
@@ -374,19 +384,19 @@ void drawSpin()
 
   int frame = int(frameCount - modeFrameStart);
   int step = frame % (WIDTH+HEIGHT-2);
-  
+
   if (step < WIDTH)
     line(step, 0, WIDTH-step-1, HEIGHT-1);
   else
     line(0, HEIGHT-(step-WIDTH+1)-1, WIDTH, step-WIDTH+1); 
-  
+
   if (frame >= (WIDTH+HEIGHT-2)*10)
     newMode();
 }
 
 void drawAnimation() {
   boolean done = animations[currentAnimation].draw();
-  
+
   if (done) { 
     newMode(); 
     background(0);
@@ -398,13 +408,28 @@ void drawWaves() {
   for (int i=0; i<NUMBER_OF_WAVES; i++) {
     waves[i].draw();
   }
-  
+
   long frame = frameCount - modeFrameStart;
   if (frame > frameRate*TYPICAL_MODE_TIME) {
     for (int i=0; i<NUMBER_OF_WAVES; i++) {
       waves[i].init();
     }
-    
+
+    newMode();
+  }
+}
+
+MoviePlayer movie = null;
+
+void drawMovie() {
+  if (movie == null) {
+    movie = new MoviePlayer(this);
+  }
+
+  movie.draw();
+
+  long frame = frameCount - modeFrameStart;
+  if (frame > FRAMERATE*TYPICAL_MODE_TIME) {
     newMode();
   }
 }
@@ -424,22 +449,22 @@ class Star {
   float y;
   int z;
   float s;
-  
+
   public Star(float s) {
     this.s = s;
     this.reset();
   }
-  
+
   public void draw() {
     x = x + s;
     if (x>WIDTH*ZOOM)
       this.reset();
-    
+
     noStroke();
     fill(z);
-    rect(x,y,ZOOM,ZOOM);
+    rect(x, y, ZOOM, ZOOM);
   }
-  
+
   public void reset() {
     x = -random(WIDTH*ZOOM);
     y = random(HEIGHT*ZOOM);
@@ -455,12 +480,12 @@ class Burst {
   float maxd;
   float speed;
   int intensity;
-  
+
   public Burst()
   {
     init();
   }
-  
+
   public void init()
   {
     x = random(WIDTH);
@@ -470,7 +495,7 @@ class Burst {
     d = 0;
     intensity = 255;
   }
-  
+
   public void draw(boolean fl)
   {
     if (fl)
@@ -482,7 +507,7 @@ class Burst {
     d+= speed;
     if (d > maxd)
       intensity -= 15;
-      
+
     if (intensity <= 0)
       init();
   }
@@ -492,91 +517,153 @@ class Animation {
   public PImage[] frames;
   public int frameNumber;
   int frameDivider;
-  
+
   public Animation(String name, int frameDivider) {
     this.frameNumber = 0;
     this.frameDivider = frameDivider;
     this.load(name);
   }
-  
+
   public void load(String name) {
     File dir = new File(savePath("data/" + name));
     String[] list = dir.list();
-    
+
     frames = new PImage[list.length];
     for (int i=0; i<frames.length; i++) {
-       println("Loading " + name + "/frame" + (i+1) + ".png");
-       frames[i] = loadImage(name + "/frame" + (i+1) + ".png");
-       frames[i].filter(INVERT);
+      println("Loading " + name + "/frame" + (i+1) + ".png");
+      frames[i] = loadImage(name + "/frame" + (i+1) + ".png");
+      frames[i].filter(INVERT);
     }
   }
-  
+
   public boolean draw() {
     if (frameCount % frameDivider == 0) {
       frameNumber++;
       if (frameNumber >= frames.length) {
-        
+
         frameNumber = 0;
         return true;
       }
-      
-      image(frames[frameNumber],0,0,WIDTH,HEIGHT);
+
+      image(frames[frameNumber], 0, 0, WIDTH, HEIGHT);
     }
-    
+
     return false;
   }
 }
 
 class Wave {
-    private float a;
-    private float f;
-    private float r;
-    private int y;
-    private boolean t;
-    private float s;
-    
-    PGraphics g;
-    
-    public Wave() {
-      init();
-      
-      g = createGraphics(WIDTH,HEIGHT,P2D);
+  private float a;
+  private float f;
+  private float r;
+  private int y;
+  private boolean t;
+  private float s;
+
+  PGraphics g;
+
+  public Wave() {
+    init();
+
+    g = createGraphics(WIDTH, HEIGHT, P2D);
+  }
+
+  public void init() {
+    r = random(TWO_PI);
+    f = PI/32 + random(PI/32);
+    a = HEIGHT/3 + random(HEIGHT/3);
+    y = HEIGHT/8 + int(random(HEIGHT - HEIGHT/8));
+    s = PI/128 + random(PI/64);
+
+    if (random(10)<5) { 
+      s = -s;
     }
-    
-    public void init() {
-      r = random(TWO_PI);
-      f = PI/32 + random(PI/32);
-      a = HEIGHT/3 + random(HEIGHT/3);
-      y = HEIGHT/8 + int(random(HEIGHT - HEIGHT/8));
-      s = PI/128 + random(PI/64);
-      
-      if (random(10)<5) { s = -s; }
+  }
+
+  public void draw() {
+    float step;
+    float h;
+
+    r = r + s;
+    if (r > TWO_PI) r = r - TWO_PI;
+
+    step = r;
+
+    g.beginDraw();
+    g.background(0);
+    g.stroke(100);
+
+    for (int x=0; x<WIDTH; x++) {
+      h = sin(step) * a;
+      step = step + f;          
+      g.line(x, y, x, y+h);
     }
-    
-    public void draw() {
-      float step;
-      float h;
-      
-      r = r + s;
-      if (r > TWO_PI) r = r - TWO_PI;
-      
-      step = r;
-      
-      g.beginDraw();
-      g.background(0);
-      g.stroke(100);
-      
-      for (int x=0; x<WIDTH; x++) {
-         h = sin(step) * a;
-         step = step + f;          
-         g.line(x,y,x,y+h);
+
+    g.endDraw();
+
+    blend(g, 0, 0, WIDTH, HEIGHT, 0, 0, WIDTH, HEIGHT, SCREEN);
+  }
+}    
+
+class MoviePlayer {
+  Movie movie;
+  GSMovie gsmovie;
+  long movieEndFrame;
+  String[] movieList;
+  PApplet parent;
+
+  public MoviePlayer(PApplet parent) {
+    this.parent = parent;
+    this.movie = null;
+    this.gsmovie = null;
+    this.movieEndFrame = 0;
+    this.getMovieList();
+  }
+
+  public void draw() {
+    if (this.movie == null || frameCount >= movieEndFrame) {
+      movieEndFrame = frameCount + int(frameRate * (10 + random(35)));
+      loadRandomMovie();
+    }
+
+    if (USE_GSMOVIE) {
+      image(gsmovie, 0, 0, WIDTH, HEIGHT);
+    }
+    else {
+      if (movie.available()) {
+        movie.read();
       }
       
-      g.endDraw();
-      
-      blend(g,0,0,WIDTH,HEIGHT,0,0,WIDTH,HEIGHT,SCREEN);
+      image(movie, 0, 0, WIDTH, HEIGHT);
     }
-}    
+  }
+
+  public void getMovieList() {
+    File dir = new File(savePath("data/movies" ));
+    movieList = dir.list();
+  }
+
+  public void loadRandomMovie() {
+    int index = int(random(movieList.length));
+    String filename = movieList[index];
     
-    
-    
+    println("Loading "+filename);
+
+    if (USE_GSMOVIE) {
+      gsmovie = new GSMovie(this.parent, "movies/"+filename);
+      gsmovie.resize(WIDTH, HEIGHT);
+      gsmovie.volume(0);
+      gsmovie.loop();
+    }
+    else {
+      if (movie != null) {
+        movie.stop();
+      }
+      
+      movie = new Movie(this.parent, "movies/"+filename);
+      movie.resize(WIDTH, HEIGHT);
+      movie.loop();
+    }
+  }
+}
+
