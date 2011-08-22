@@ -25,9 +25,11 @@ String[] enabledModes = new String[] {
   //    "drawSticks",
   //    "drawLinesTheOtherWay",
   //    "drawSpin",
-  //    "drawAnimation",
+      "drawAnimation",
   //    "drawWaves",
-  "drawMovie"
+ // "drawMovie"
+ //      "drawStarField"
+ //        "drawTargetScanner"
 };
 
 String messages[] = new String[] {
@@ -39,7 +41,8 @@ String messages[] = new String[] {
 String message = "DISORIENT";
 
 String[] enabledAnimations = new String[] {
-  "anim-heart"
+  //"anim-heart"
+  "anim-ddr"
 };
 Animation[] animations;
 int currentAnimation = 0;
@@ -50,6 +53,8 @@ PFont font;
 int ZOOM = 1;
 int NUMBER_OF_STARS = 30;
 Star[] stars;
+RadialStar[] radialStars;
+Target targetScanner;
 
 int NUMBER_OF_BURSTS = 4;
 Burst[] bursts;
@@ -84,11 +89,18 @@ void setup() {
   for (int i=0; i<NUMBER_OF_STARS; i++) {
     stars[i] = new Star(i*1.0/NUMBER_OF_STARS*ZOOM);
   }
+  
+  radialStars = new RadialStar[NUMBER_OF_STARS];
+  for (int i=0; i<NUMBER_OF_STARS; i++) {
+    radialStars[i] = new RadialStar(); 
+  }
 
   bursts = new Burst[NUMBER_OF_BURSTS];
   for (int i = 0; i<NUMBER_OF_BURSTS; i++) {
     bursts[i] = new Burst();
   }
+  
+  targetScanner = new Target();
 
   dacwes = new Dacwes(this, WIDTH, HEIGHT);
   dacwes.setAddress(hostname);
@@ -238,6 +250,28 @@ void drawStars() {
   }
 
   if (frameCount - modeFrameStart > FRAMERATE*TYPICAL_MODE_TIME) {
+    newMode();
+  }
+}
+
+void drawStarField() {
+  background(0);
+ 
+  for (int i=0; i<NUMBER_OF_STARS; i++) {
+    radialStars[i].draw();
+  }
+ 
+ if (frameCount - modeFrameStart > FRAMERATE*TYPICAL_MODE_TIME) {
+    newMode();
+  }
+}
+
+void drawTargetScanner() {
+  background(0);
+
+  targetScanner.draw();
+  
+ if (frameCount - modeFrameStart > FRAMERATE*TYPICAL_MODE_TIME) {
     newMode();
   }
 }
@@ -443,6 +477,72 @@ void drawMovie() {
  *
  *
  **/
+
+class RadialStar {
+  float x;
+  float y;
+  float theta;
+  float v;
+ 
+ public RadialStar() {
+   this.reset();
+ }
+ 
+ public void draw() {
+   x = x + (v * cos(theta));
+   y = y + (v * sin(theta));
+   
+   noStroke();
+   fill(255);
+   rect(x, y, 1, 1);
+   
+   if ((x > WIDTH || x < 0) || (y > HEIGHT || y < 0)) this.reset();
+   
+ }
+ 
+ public void reset() {
+    x = 7;
+    y = 7;
+    theta = random(0, 2 * PI);
+    v = random(0.05, 1);
+ }
+
+}
+
+class Target {
+ float x;
+ float y;
+ float destx;
+ float desty;
+ float v;
+ 
+ public Target() {
+  this.reset(); 
+ }
+ 
+ public void reset() {
+  destx = int(random(0, WIDTH));
+  desty = int(random(0, HEIGHT));
+  v = random(0.02, 0.07);
+ }
+ 
+ public void draw() {
+  x = lerp(x, destx, v);
+  y = lerp(y, desty, v);
+  
+  noStroke();
+  fill(255);
+  rect(int(x), 0, 1, HEIGHT);
+  rect(0, int(y), WIDTH, 1);
+  ellipse(int(x), int(y), 5, 5);
+  
+  fill(0);
+  ellipse(int(x), int(y), 3, 3);
+  
+  if (abs(x - destx) < 1 || abs(y - desty) < 1) this.reset();
+
+ }
+}
 
 class Star {
   float x;
