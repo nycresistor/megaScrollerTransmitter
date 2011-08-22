@@ -25,11 +25,11 @@ String[] enabledModes = new String[] {
   //    "drawSticks",
   //    "drawLinesTheOtherWay",
   //    "drawSpin",
-  //    "drawAnimation",
+      "drawAnimation",
   //    "drawWaves",
  // "drawMovie"
  //      "drawStarField"
-         "drawTargetScanner"
+ //        "drawTargetScanner"
 };
 
 String messages[] = new String[] {
@@ -41,7 +41,8 @@ String messages[] = new String[] {
 String message = "DISORIENT";
 
 String[] enabledAnimations = new String[] {
-  "anim-heart"
+  //"anim-heart"
+  "anim-ddr"
 };
 Animation[] animations;
 int currentAnimation = 0;
