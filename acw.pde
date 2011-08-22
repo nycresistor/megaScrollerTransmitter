@@ -27,7 +27,8 @@ String[] enabledModes = new String[] {
   //    "drawSpin",
   //    "drawAnimation",
   //    "drawWaves",
-  "drawMovie"
+ // "drawMovie"
+        "drawStarField"
 };
 
 String messages[] = new String[] {
@@ -50,6 +51,7 @@ PFont font;
 int ZOOM = 1;
 int NUMBER_OF_STARS = 30;
 Star[] stars;
+RadialStar[] radialStars;
 
 int NUMBER_OF_BURSTS = 4;
 Burst[] bursts;
@@ -83,6 +85,11 @@ void setup() {
   stars = new Star[NUMBER_OF_STARS];
   for (int i=0; i<NUMBER_OF_STARS; i++) {
     stars[i] = new Star(i*1.0/NUMBER_OF_STARS*ZOOM);
+  }
+  
+  radialStars = new RadialStar[NUMBER_OF_STARS];
+  for (int i=0; i<NUMBER_OF_STARS; i++) {
+    radialStars[i] = new RadialStar(); 
   }
 
   bursts = new Burst[NUMBER_OF_BURSTS];
@@ -238,6 +245,18 @@ void drawStars() {
   }
 
   if (frameCount - modeFrameStart > FRAMERATE*TYPICAL_MODE_TIME) {
+    newMode();
+  }
+}
+
+void drawStarField() {
+  background(0);
+ 
+  for (int i=0; i<NUMBER_OF_STARS; i++) {
+    radialStars[i].draw();
+  }
+ 
+ if (frameCount - modeFrameStart > FRAMERATE*TYPICAL_MODE_TIME) {
     newMode();
   }
 }
@@ -443,6 +462,37 @@ void drawMovie() {
  *
  *
  **/
+
+class RadialStar {
+  float x;
+  float y;
+  float theta;
+  float v;
+ 
+ public RadialStar() {
+   this.reset();
+ }
+ 
+ public void draw() {
+   x = x + (v * cos(theta));
+   y = y + (v * sin(theta));
+   
+   noStroke();
+   fill(255);
+   rect(x, y, 1, 1);
+   
+   if ((x > WIDTH || x < 0) || (y > HEIGHT || y < 0)) this.reset();
+   
+ }
+ 
+ public void reset() {
+    x = 7;
+    y = 7;
+    theta = random(0, 2 * PI);
+    v = random(0.05, 1);
+ }
+
+}
 
 class Star {
   float x;
