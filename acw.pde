@@ -28,7 +28,8 @@ String[] enabledModes = new String[] {
   //    "drawAnimation",
   //    "drawWaves",
  // "drawMovie"
-        "drawStarField"
+ //      "drawStarField"
+         "drawTargetScanner"
 };
 
 String messages[] = new String[] {
@@ -52,6 +53,7 @@ int ZOOM = 1;
 int NUMBER_OF_STARS = 30;
 Star[] stars;
 RadialStar[] radialStars;
+Target targetScanner;
 
 int NUMBER_OF_BURSTS = 4;
 Burst[] bursts;
@@ -96,6 +98,8 @@ void setup() {
   for (int i = 0; i<NUMBER_OF_BURSTS; i++) {
     bursts[i] = new Burst();
   }
+  
+  targetScanner = new Target();
 
   dacwes = new Dacwes(this, WIDTH, HEIGHT);
   dacwes.setAddress(hostname);
@@ -256,6 +260,16 @@ void drawStarField() {
     radialStars[i].draw();
   }
  
+ if (frameCount - modeFrameStart > FRAMERATE*TYPICAL_MODE_TIME) {
+    newMode();
+  }
+}
+
+void drawTargetScanner() {
+  background(0);
+
+  targetScanner.draw();
+  
  if (frameCount - modeFrameStart > FRAMERATE*TYPICAL_MODE_TIME) {
     newMode();
   }
@@ -492,6 +506,41 @@ class RadialStar {
     v = random(0.05, 1);
  }
 
+}
+
+class Target {
+ float x;
+ float y;
+ float destx;
+ float desty;
+ float v;
+ 
+ public Target() {
+  this.reset(); 
+ }
+ 
+ public void reset() {
+  destx = int(random(0, WIDTH));
+  desty = int(random(0, HEIGHT));
+  v = random(0.02, 0.07);
+ }
+ 
+ public void draw() {
+  x = lerp(x, destx, v);
+  y = lerp(y, desty, v);
+  
+  noStroke();
+  fill(255);
+  rect(int(x), 0, 1, HEIGHT);
+  rect(0, int(y), WIDTH, 1);
+  ellipse(int(x), int(y), 5, 5);
+  
+  fill(0);
+  ellipse(int(x), int(y), 3, 3);
+  
+  if (abs(x - destx) < 1 || abs(y - desty) < 1) this.reset();
+
+ }
 }
 
 class Star {
