@@ -4,6 +4,8 @@ import processing.opengl.*;
 import java.lang.reflect.Method;
 import hypermedia.net.*;
 import java.io.*;
+import ddf.minim.*;
+import ddf.minim.analysis.*;
 
 int WIDTH = 16;
 int HEIGHT = 16;
@@ -30,7 +32,8 @@ String[] enabledModes = new String[] {
  // "drawMovie"
  //      "drawStarField"
  //        "drawTargetScanner"
-         "drawWaterfall"
+ //        "drawWaterfall"
+         "drawFFT"
 };
 
 String messages[] = new String[] {
@@ -80,6 +83,10 @@ PGraphics fadeLayer;
 int fadeOutFrames = 0;
 int fadeInFrames = 0;
 
+Minim minim;
+AudioInput audioin;
+FFT fft;
+
 void setup() {
   // Had to enable OPENGL for some reason new fonts don't work in JAVA2D.
   size(WIDTH, HEIGHT);
@@ -88,7 +95,11 @@ void setup() {
   textFont(font, FONT_SIZE);
   textMode(MODEL);
   frameRate(FRAMERATE);
-
+  
+  minim = new Minim(this);
+  audioin = minim.getLineIn(Minim.STEREO, 2048);
+  fft = new FFT(audioin.bufferSize(), audioin.sampleRate());
+  
   stars = new Star[NUMBER_OF_STARS];
   for (int i=0; i<NUMBER_OF_STARS; i++) {
     stars[i] = new Star(i*1.0/NUMBER_OF_STARS*ZOOM);
@@ -250,6 +261,21 @@ void drawBursts()
   }
 }
 
+void drawFFT() {
+  background(0);
+  stroke(255);
+  
+  fft.forward(audioin.mix);
+  
+  for(int i = 0; i < fft.specSize(); i++)
+  {
+    // draw the line for frequency band i, scaling it by 4 so we can see it a bit better
+    //line(i, HEIGHT, i, HEIGHT - fft.getBand(i)*4);
+    line(i, HEIGHT, i, HEIGHT - fft.getBand(i));
+  }
+  
+  //fill(255);
+}
 
 void drawStars() {
   background(0);
