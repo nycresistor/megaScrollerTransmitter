@@ -12,7 +12,7 @@ int FONT_SIZE = HEIGHT;
 int FRAMERATE = 30;
 String hostname = "127.0.0.1"; //"192.168.1.130";
 int TYPICAL_MODE_TIME = 30;
-boolean USE_GSMOVIE = false;
+boolean USE_GSMOVIE = true;
 
 String[] enabledModes = new String[] {
   //    "drawGreetz",
@@ -721,16 +721,22 @@ class MoviePlayer {
   }
 
   public void draw() {
-    if (this.movie == null || frameCount >= movieEndFrame) {
+    if ((this.gsmovie == null && this.movie == null) || 
+      (frameCount >= movieEndFrame)
+    ) {
       movieEndFrame = frameCount + int(frameRate * (10 + random(35)));
       loadRandomMovie();
     }
 
     if (USE_GSMOVIE) {
+      if (gsmovie.available()) { 
+        gsmovie.read();
+      }
+
       image(gsmovie, 0, 0, WIDTH, HEIGHT);
     }
     else {
-      if (movie.available()) {
+      if (movie.available()) { 
         movie.read();
       }
       
@@ -748,6 +754,10 @@ class MoviePlayer {
     String filename = movieList[index];
     
     println("Loading "+filename);
+    
+    if (movie != null) {
+      movie.stop();
+    }  
 
     if (USE_GSMOVIE) {
       gsmovie = new GSMovie(this.parent, "movies/"+filename);
@@ -756,10 +766,6 @@ class MoviePlayer {
       gsmovie.loop();
     }
     else {
-      if (movie != null) {
-        movie.stop();
-      }
-      
       movie = new Movie(this.parent, "movies/"+filename);
       movie.resize(WIDTH, HEIGHT);
       movie.loop();
