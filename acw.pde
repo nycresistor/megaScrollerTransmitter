@@ -25,11 +25,12 @@ String[] enabledModes = new String[] {
   //    "drawSticks",
   //    "drawLinesTheOtherWay",
   //    "drawSpin",
-      "drawAnimation",
+//      "drawAnimation",
   //    "drawWaves",
  // "drawMovie"
  //      "drawStarField"
  //        "drawTargetScanner"
+         "drawWaterfall"
 };
 
 String messages[] = new String[] {
@@ -55,6 +56,9 @@ int NUMBER_OF_STARS = 30;
 Star[] stars;
 RadialStar[] radialStars;
 Target targetScanner;
+
+int NUMBER_OF_WATERFALLS = 20;
+Waterfall[] waterfalls;
 
 int NUMBER_OF_BURSTS = 4;
 Burst[] bursts;
@@ -101,6 +105,11 @@ void setup() {
   }
   
   targetScanner = new Target();
+  
+  waterfalls = new Waterfall[NUMBER_OF_WATERFALLS];
+  for (int i = 0; i<NUMBER_OF_WATERFALLS; i++) {
+    waterfalls[i] = new Waterfall();
+  }
 
   dacwes = new Dacwes(this, WIDTH, HEIGHT);
   dacwes.setAddress(hostname);
@@ -274,6 +283,19 @@ void drawTargetScanner() {
  if (frameCount - modeFrameStart > FRAMERATE*TYPICAL_MODE_TIME) {
     newMode();
   }
+}
+
+void drawWaterfall() {
+  background(0);
+  stroke(255);
+  
+  for (int i=0; i<NUMBER_OF_WATERFALLS; i++) {
+    waterfalls[i].draw();
+  }
+ 
+  if (frameCount - modeFrameStart > FRAMERATE*TYPICAL_MODE_TIME) {
+    newMode();
+  } 
 }
 
 void drawFlash() {
@@ -477,6 +499,32 @@ void drawMovie() {
  *
  *
  **/
+
+class Waterfall {
+  float x;
+  float y;
+  float len;
+  float v;
+  
+  public Waterfall() {
+    this.reset(); 
+  }
+  
+  public void reset() {
+    x = int(random(0, WIDTH));
+    y = -1;
+    len = random(1, 5);
+    v = random(0.1, 1);
+  }
+  
+  public void draw() {
+    y = y + v; 
+        
+    rect(x, y, 0.1, len);
+    if (y > HEIGHT) this.reset();
+    
+  }
+}
 
 class RadialStar {
   float x;
