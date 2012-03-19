@@ -122,7 +122,7 @@ void setup() {
 
   dacwes = new Dacwes(this, WIDTH, HEIGHT);
   dacwes.setAddress(hostname);
-  dacwes.setAddressingMode(Dacwes.ADDRESSING_VERTICAL_FLIPFLOP);  
+  dacwes.setAddressingMode(Dacwes.ADDRESSING_VERTICAL_NORMAL);  
 
   if (enabledAnimations.length > 0) {
     animations = new Animation[enabledAnimations.length];
