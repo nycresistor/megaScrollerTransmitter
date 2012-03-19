@@ -111,7 +111,6 @@ public class Dacwes {
         buffer[(getAddress(x,y)*3)+3] = byte(b);
       }
     }
-    println(buffer);
     udp.send(buffer,address,port);
   }  
 }
