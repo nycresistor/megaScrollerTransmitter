@@ -53,7 +53,7 @@ public class Dacwes {
     this.port = 58082;
     this.w = w;
     this.h = h;
-    int bufferSize = w*h+1;
+    int bufferSize = 3*(w*h)+1;
     buffer = new byte[bufferSize];
     this.addressingMode = ADDRESSING_VERTICAL_NORMAL;
     this.pixelsPerChannel = 8;
@@ -96,14 +96,22 @@ public class Dacwes {
     image.loadPixels();
 
     int r;
+    int g;
+    int b;
     buffer[0] = 1;
     for (int y=0; y<h; y++) {
       for (int x=0; x<w; x++) {
-        r = int(brightness(image.pixels[y*w+x]));
-        buffer[getAddress(x,y)+1] = byte(r);
+        //r = int(brightness(image.pixels[y*w+x]));
+        r = int(red(image.pixels[y*w+x]));
+        g = int(green(image.pixels[y*w+x]));
+        b = int(blue(image.pixels[y*w+x]));
+        
+        buffer[(getAddress(x,y)*3)+1] = byte(r);
+        buffer[(getAddress(x,y)*3)+2] = byte(g);
+        buffer[(getAddress(x,y)*3)+3] = byte(b);
       }
     }
-    
+    println(buffer);
     udp.send(buffer,address,port);
   }  
 }
