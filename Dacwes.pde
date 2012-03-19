@@ -53,11 +53,12 @@ public class Dacwes {
     this.port = 58082;
     this.w = w;
     this.h = h;
-    buffer = new byte[w*h+1];
+    bufferSize = w*h+1;
+    buffer = new byte[bufferSize];
     this.addressingMode = ADDRESSING_VERTICAL_NORMAL;
     this.pixelsPerChannel = 8;
     
-    for (int i=0; i<257; i++) {
+    for (int i=0; i<bufferSize; i++) {
       buffer[i] = 0;
     }
   }
