@@ -81,7 +81,7 @@ public class Dacwes {
   
   private int getAddress(int x, int y) {
     if (addressingMode == ADDRESSING_VERTICAL_NORMAL) {
-      return (x * h + y);
+      return (y * w + x);
     }
     return 0;
   }    
@@ -111,6 +111,7 @@ public class Dacwes {
         buffer[(getAddress(x,y)*3)+3] = byte(b);
       }
     }
+
     udp.send(buffer,address,port);
   }  
 }
