@@ -6,10 +6,10 @@ import java.io.*;
 import ddf.minim.*;
 import ddf.minim.analysis.*;
 
-int WIDTH = 16;
-int HEIGHT = 16;
+int WIDTH = 25;
+int HEIGHT = 135;
 boolean VERTICAL = false;
-int FONT_SIZE = HEIGHT;
+int FONT_SIZE = 16;
 int FRAMERATE = 30;
 String hostname = "127.0.0.1"; //"192.168.1.130";
 int TYPICAL_MODE_TIME = 30;
@@ -27,11 +27,11 @@ String[] enabledModes = new String[] {
       "drawSpin",
       "drawAnimation",
       "drawWaves",
-  "drawMovie",
-       "drawStarField",
-         "drawTargetScanner",
-         "drawWaterfall",
-         "drawFFT"
+      "drawMovie",
+      "drawStarField",
+      "drawTargetScanner",
+      "drawWaterfall",
+      "drawFFT"
 };
 
 String messages[] = new String[] {
@@ -139,7 +139,6 @@ void setup() {
   }
 
   setMode(0);  
-
 
   smooth();
 }
