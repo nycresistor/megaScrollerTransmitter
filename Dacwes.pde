@@ -81,7 +81,11 @@ public class Dacwes {
   
   private int getAddress(int x, int y) {
     if (addressingMode == ADDRESSING_VERTICAL_NORMAL) {
+<<<<<<< HEAD
       return (y * w + x);
+=======
+      return (x * w + y);
+>>>>>>> 94378bfd769f07bbcddb09970fb5ad149fd34770
     }
     return 0;
   }    
