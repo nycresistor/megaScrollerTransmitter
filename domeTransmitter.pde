@@ -1,4 +1,3 @@
-import processing.video.*;
 import codeanticode.gsvideo.*;
 import processing.opengl.*;
 import java.lang.reflect.Method;
@@ -14,25 +13,24 @@ int FONT_SIZE = HEIGHT;
 int FRAMERATE = 30;
 String hostname = "127.0.0.1"; //"192.168.1.130";
 int TYPICAL_MODE_TIME = 30;
-boolean USE_GSMOVIE = true;
 
 String[] enabledModes = new String[] {
-  //    "drawGreetz",
-  //    "drawBursts",
-  //    "drawFlash",
-  //    "drawLines",
-  //    "drawFader",
-  //    "drawCurtain",
-  //    "drawVertLine",
-  //    "drawSticks",
-  //    "drawLinesTheOtherWay",
-  //    "drawSpin",
-//      "drawAnimation",
-  //    "drawWaves",
- // "drawMovie"
- //      "drawStarField"
- //        "drawTargetScanner"
- //        "drawWaterfall"
+      "drawGreetz",
+      "drawBursts",
+      "drawFlash",
+      "drawLines",
+      "drawFader",
+      "drawCurtain",
+      "drawVertLine",
+      "drawSticks",
+      "drawLinesTheOtherWay",
+      "drawSpin",
+      "drawAnimation",
+      "drawWaves",
+  "drawMovie",
+       "drawStarField",
+         "drawTargetScanner",
+         "drawWaterfall",
          "drawFFT"
 };
 
@@ -501,20 +499,6 @@ void drawWaves() {
   }
 }
 
-MoviePlayer movie = null;
-
-void drawMovie() {
-  if (movie == null) {
-    movie = new MoviePlayer(this);
-  }
-
-  movie.draw();
-
-  long frame = frameCount - modeFrameStart;
-  if (frame > FRAMERATE*TYPICAL_MODE_TIME) {
-    newMode();
-  }
-}
 
 /**
  *
@@ -779,71 +763,6 @@ class Wave {
   }
 }    
 
-class MoviePlayer {
-  Movie movie;
-  GSMovie gsmovie;
-  long movieEndFrame;
-  String[] movieList;
-  PApplet parent;
 
-  public MoviePlayer(PApplet parent) {
-    this.parent = parent;
-    this.movie = null;
-    this.gsmovie = null;
-    this.movieEndFrame = 0;
-    this.getMovieList();
-  }
 
-  public void draw() {
-    if ((this.gsmovie == null && this.movie == null) || 
-      (frameCount >= movieEndFrame)
-    ) {
-      movieEndFrame = frameCount + int(frameRate * (10 + random(35)));
-      loadRandomMovie();
-    }
-
-    if (USE_GSMOVIE) {
-      if (gsmovie.available()) { 
-        gsmovie.read();
-      }
-
-      image(gsmovie, 0, 0, WIDTH, HEIGHT);
-    }
-    else {
-      if (movie.available()) { 
-        movie.read();
-      }
-      
-      image(movie, 0, 0, WIDTH, HEIGHT);
-    }
-  }
-
-  public void getMovieList() {
-    File dir = new File(savePath("data/movies" ));
-    movieList = dir.list();
-  }
-
-  public void loadRandomMovie() {
-    int index = int(random(movieList.length));
-    String filename = movieList[index];
-    
-    println("Loading "+filename);
-    
-    if (movie != null) {
-      movie.stop();
-    }  
-
-    if (USE_GSMOVIE) {
-      gsmovie = new GSMovie(this.parent, "movies/"+filename);
-      gsmovie.resize(WIDTH, HEIGHT);
-      gsmovie.volume(0);
-      gsmovie.loop();
-    }
-    else {
-      movie = new Movie(this.parent, "movies/"+filename);
-      movie.resize(WIDTH, HEIGHT);
-      movie.loop();
-    }
-  }
-}
 
