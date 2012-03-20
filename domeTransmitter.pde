@@ -16,7 +16,7 @@ int TYPICAL_MODE_TIME = 30;
 
 String[] enabledModes = new String[] {
       "drawGreetz",
-      "drawBursts",
+/*      "drawBursts",
       "drawFlash",
       "drawLines",
       "drawFader",
@@ -32,13 +32,14 @@ String[] enabledModes = new String[] {
       "drawTargetScanner",
       "drawWaterfall",
       "drawFFT"
+*/
 };
 
 String messages[] = new String[] {
-  "DISORIENT", 
+  "DISORIENT"//, 
   //  "KOSTUME  KULT",
   //  "BLACK  LIGHT  BALL"
-  "COUNTRY  CLUB"
+//  "COUNTRY  CLUB"
 };  
 String message = "DISORIENT";
 
@@ -85,9 +86,10 @@ Minim minim;
 AudioInput audioin;
 FFT fft;
 
+
 void setup() {
   // Had to enable OPENGL for some reason new fonts don't work in JAVA2D.
-  size(WIDTH, HEIGHT);
+  size(WIDTH,HEIGHT);
 
   font = loadFont("Disorient-" + FONT_SIZE + ".vlw");
   textFont(font, FONT_SIZE);
@@ -220,7 +222,7 @@ void draw() {
     fadeInFrames--;
   }
 
-  dacwes.sendData();
+  dacwes.sendData();  
 }
 
 void drawGreetz() {
@@ -230,8 +232,12 @@ void drawGreetz() {
   if (w == 0) {
     w = -int((message.length()-1) * (FONT_SIZE*1.35) + WIDTH);
   }
-
-  text(message, x, FONT_SIZE);
+  
+  fill(255,128,64);
+  text(message, x, 40);
+  PImage i = get(0,40-FONT_SIZE,WIDTH,FONT_SIZE);
+  i.resize(WIDTH,FONT_SIZE*6);
+  image(i,0,40-FONT_SIZE);
 
   if (frameCount % 2 == 0) {
     x = x - 1;
