@@ -86,6 +86,17 @@ public class Dacwes {
     return 0;
   }    
   
+  public void sendMode(String modeName) {
+    byte modeBuffer[] = new byte[modeName.length()+1];
+    
+    modeBuffer[0] = 2;
+    for(int i = 0; i < modeName.length(); i++) {
+      modeBuffer[i+1] = (byte)modeName.charAt(i);
+    }
+    
+    udp.send(modeBuffer,address,port);
+  }
+  
   public void sendData() {
     PImage image = get();
     

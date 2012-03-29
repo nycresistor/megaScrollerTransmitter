@@ -193,6 +193,7 @@ void newMode() {
   }
 
   setMode(newMode);
+  dacwes.sendMode(enabledModes[newMode]);
 }
 
 void draw() {
