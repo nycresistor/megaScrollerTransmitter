@@ -1,4 +1,6 @@
-import hypermedia.net.*;
+//import hypermedia.net.*;
+import muthesius.net.*;
+import org.webbitserver.*;
 
 /**
  * This class can be added to your sketches to make them compatible with the sign.
@@ -28,6 +30,13 @@ import hypermedia.net.*;
  *
  **/
 
+  protected static final byte[] Hexhars = {
+
+'0', '1', '2', '3', '4', '5',
+'6', '7', '8', '9', 'a', 'b',
+'c', 'd', 'e', 'f' 
+};
+
 public class Dacwes {
   public static final int ADDRESSING_VERTICAL_NORMAL = 1;
   public static final int ADDRESSING_VERTICAL_HALF = 2;
@@ -37,7 +46,6 @@ public class Dacwes {
   public static final int ADDRESSING_HORIZONTAL_FLIPFLOP = 6;
   
   PApplet parent;
-  UDP udp;
   String address;
   int port;
   int w;
@@ -45,10 +53,12 @@ public class Dacwes {
   int addressingMode;
   byte buffer[];
   int pixelsPerChannel;
+  
+
 
   public Dacwes(PApplet parent, int w, int h) {
     this.parent = parent;
-    this.udp = new UDP(parent);
+
     this.address = "192.168.1.130";
     this.port = 58082;
     this.w = w;
@@ -94,7 +104,7 @@ public class Dacwes {
       modeBuffer[i+1] = (byte)modeName.charAt(i);
     }
     
-    udp.send(modeBuffer,address,port);
+    //udp.send(modeBuffer,address,port);
   }
   
   public void sendData() {
@@ -122,8 +132,23 @@ public class Dacwes {
         buffer[(getAddress(x,y)*3)+3] = byte(b);
       }
     }
+    
+    StringBuilder s = new StringBuilder(buffer.length *2);
+    for (int i=0; i < buffer.length; i++) {
+      int v = buffer[i] & 0xff;
+      s.append((char)Hexhars[v >> 4]);
+      s.append((char)Hexhars[v & 0xf]);
+    }
 
-    udp.send(buffer,address,port);
+    
+//     for (int i=0; i < buffer.length; i++) {
+//      int v = buffer[i] 
+//      s.append((char)Hexhars[v >> 4]);
+//      s.append((char)Hexhars[v & 0xf]);
+//    }
+
+    socket.broadcast(s.toString());    
+    //udp.send(buffer,address,port);
   }  
 }
   
