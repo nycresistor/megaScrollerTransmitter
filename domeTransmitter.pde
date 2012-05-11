@@ -1,40 +1,40 @@
 import codeanticode.gsvideo.*;
 import processing.opengl.*;
 import java.lang.reflect.Method;
+import hypermedia.net.*;
 import java.io.*;
 import ddf.minim.*;
 import ddf.minim.analysis.*;
-import muthesius.net.*;
-import org.webbitserver.*;
 
 int WIDTH = 25;
-int HEIGHT = 135;
+int HEIGHT = 160;
 boolean VERTICAL = false;
 int FONT_SIZE = 16;
 int FRAMERATE = 30;
 String hostname = "127.0.0.1"; //"192.168.1.130";
 int TYPICAL_MODE_TIME = 30;
 
-
 String[] enabledModes = new String[] {
-      "drawGreetz",
-/*      "drawBursts",
-      "drawFlash",
-      "drawLines",
-      "drawFader",
-      "drawCurtain",
-      "drawVertLine",
-      "drawSticks",
-      "drawLinesTheOtherWay",
-      "drawSpin",
-      "drawAnimation",
-      "drawWaves",
-      "drawMovie",
-      "drawStarField",
-      "drawTargetScanner",
-      "drawWaterfall",
-      "drawFFT"
-*/
+//      "drawGreetz",
+//      "drawBursts",
+//      "drawFlash",
+//      "drawLines",
+//      "drawFader",
+//      "drawCurtain",
+//      "drawVertLine",
+//      "drawSticks",
+//      "drawLinesTheOtherWay",
+//      "drawSpin",
+//      "drawAnimation",
+//      "drawWaves",
+//      "drawMovie",
+//      "drawStarField",
+//      "drawTargetScanner",
+//      "drawWaterfall",
+//      "drawFFT",
+//      "drawRGB",
+//      "drawFlashColors",
+      "drawFollowMouse",
 };
 
 String messages[] = new String[] {
@@ -88,15 +88,11 @@ Minim minim;
 AudioInput audioin;
 FFT fft;
 
-WebSocketP5 socket;
-boolean connected = false;
 
 void setup() {
-  
-  
   // Had to enable OPENGL for some reason new fonts don't work in JAVA2D.
   size(WIDTH,HEIGHT);
-  
+
   font = loadFont("Disorient-" + FONT_SIZE + ".vlw");
   textFont(font, FONT_SIZE);
   textMode(MODEL);
@@ -129,8 +125,8 @@ void setup() {
   }
 
   dacwes = new Dacwes(this, WIDTH, HEIGHT);
-//  dacwes.setAddress(hostname);
-//  dacwes.setAddressingMode(Dacwes.ADDRESSING_VERTICAL_NORMAL);  
+  dacwes.setAddress(hostname);
+  dacwes.setAddressingMode(Dacwes.ADDRESSING_VERTICAL_NORMAL);  
 
   if (enabledAnimations.length > 0) {
     animations = new Animation[enabledAnimations.length];
@@ -149,31 +145,6 @@ void setup() {
   setMode(0);  
 
   smooth();
-  
-  socket = new WebSocketP5(this,8080);
-}
-
-void stop(){
-	socket.stop();
-}
-
-void mousePressed(){
-  socket.broadcast("hello from processing!");
-}
-
-void websocketOnMessage(WebSocketConnection con, String msg){
-	println(msg);
-}
-
-void websocketOnOpen(WebSocketConnection con){
-  println("A client joined");
-  connected = true;
-  
-}
-
-void websocketOnClosed(WebSocketConnection con){
-  println("A client left");
-  connected = false;
 }
 
 void setFadeLayer(int g) {
@@ -224,7 +195,7 @@ void newMode() {
   }
 
   setMode(newMode);
-  //dacwes.sendMode(enabledModes[newMode]);
+  dacwes.sendMode(enabledModes[newMode]);
 }
 
 void draw() {
@@ -254,7 +225,8 @@ void draw() {
     fadeInFrames--;
   }
 
-  if (connected) dacwes.sendData();
+  println(frameRate);
+  dacwes.sendData();  
 }
 
 void drawGreetz() {
@@ -312,6 +284,49 @@ void drawFFT() {
   //fill(255);
 }
 
+int color_angle = 0;
+void drawRGB() {
+  background(0);
+
+  for (int row = 0; row < height; row++) {
+    for (int col = 0; col < width; col++) {
+      stroke(0,0,2*((row+col+color_angle)%128));
+      point(col,row);
+    }
+  }
+  
+  color_angle = (color_angle+1)%255;
+}
+
+void drawFollowMouse() {
+  background(0);
+
+  for (int row = 0; row < height; row++) {
+    for (int col = 0; col < width; col++) {
+      if(col > mouseX && row > mouseY) {
+        stroke(255,0,0);
+      }
+      else if(col > mouseX && row < mouseY) {
+        stroke(0,255,0);        
+      }
+      else if(col < mouseX && row > mouseY) {
+        stroke(0,0,255);        
+      }
+      else if(col < mouseX && row < mouseY) {
+        stroke(0,0,0);        
+      }
+      else {
+        stroke(255,255,255);
+      }
+//      stroke(0,0,2*((row+col+color_angle)%128));
+      point(col,row);
+    }
+  }
+  
+  color_angle = (color_angle+1)%255;
+}
+
+
 void drawStars() {
   background(0);
 
@@ -359,14 +374,32 @@ void drawWaterfall() {
   } 
 }
 
+
+void drawFlashColors() {
+  long frame = frameCount - modeFrameStart;
+
+  print(mouseY*255.0/height);
+  print(" ");
+  
+  colorMode(HSB, 100);
+  
+  for(int x = 0; x < width; x++) {
+    for(int y = 0; y < height; y++) {
+      stroke((x*y+frame)%100,90,90);
+      point(x,y);
+    }
+  }
+}
+
+
 void drawFlash() {
   long frame = frameCount - modeFrameStart;
 
-  if (frame % (FRAMERATE/5) < 1) {
-    background(255);
+  if (frame % (2) < 1) {
+    background(255,0,0);
   }
   else {
-    background(0);
+    background(0,255,255);
   }
 
   if (frame > FRAMERATE*TYPICAL_MODE_TIME) {
