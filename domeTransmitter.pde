@@ -33,8 +33,8 @@ String[] enabledModes = new String[] {
 //      "drawWaterfall",
 //      "drawFFT",
 //      "drawRGB",
-//      "drawFlashColors",
-      "drawFollowMouse",
+      "drawFlashColors",
+//      "drawFollowMouse",
 };
 
 String messages[] = new String[] {
@@ -144,7 +144,7 @@ void setup() {
 
   setMode(0);  
 
-  smooth();
+//  smooth();
 }
 
 void setFadeLayer(int g) {
@@ -238,7 +238,11 @@ void drawGreetz() {
   }
   
   fill(255,128,64);
-  text(message, x, 40);
+  pushMatrix();
+    rotate(HALF_PI);
+    text(message, x, 0);
+  popMatrix();
+  
   PImage i = get(0,40-FONT_SIZE,WIDTH,FONT_SIZE);
   i.resize(WIDTH,FONT_SIZE*6);
   image(i,0,40-FONT_SIZE);
@@ -248,7 +252,7 @@ void drawGreetz() {
   }
 
   if (x<w) {
-    x = WIDTH;  
+    x = HEIGHT;  
     message = messages[int(random(messages.length))];
     w = 0;
     newMode();
@@ -277,8 +281,15 @@ void drawFFT() {
   for(int i = 0; i < fft.specSize(); i++)
   {
     // draw the line for frequency band i, scaling it by 4 so we can see it a bit better
-    //line(i, HEIGHT, i, HEIGHT - fft.getBand(i)*4);
-    line(i, HEIGHT, i, HEIGHT - fft.getBand(i));
+//    stroke(0,0,255);
+//    line(i, HEIGHT, i, HEIGHT - fft.getBand(i)*4);
+//    //line(i, HEIGHT, i, HEIGHT - fft.getBand(i));
+    float barHeight = fft.getBand(i)*4;
+    for (float c = 0; c < barHeight; c++) {
+      stroke(c/barHeight*255,0,255);
+      point(i, HEIGHT - c);
+    }
+
   }
   
   //fill(255);
@@ -290,7 +301,7 @@ void drawRGB() {
 
   for (int row = 0; row < height; row++) {
     for (int col = 0; col < width; col++) {
-      stroke(0,0,2*((row+col+color_angle)%128));
+      stroke(0,2*((row+col+color_angle)%128),0);
       point(col,row);
     }
   }
@@ -385,7 +396,7 @@ void drawFlashColors() {
   
   for(int x = 0; x < width; x++) {
     for(int y = 0; y < height; y++) {
-      stroke((x*y+frame)%100,90,90);
+      stroke((x*y+frame*4)%100,90,90);
       point(x,y);
     }
   }
@@ -790,6 +801,8 @@ class Wave {
 
   PGraphics g;
 
+  color c;
+
   public Wave() {
     init();
 
@@ -806,6 +819,8 @@ class Wave {
     if (random(10)<5) { 
       s = -s;
     }
+    
+    c = color(random(255), random(255), random(255));
   }
 
   public void draw() {
@@ -819,7 +834,7 @@ class Wave {
 
     g.beginDraw();
     g.background(0);
-    g.stroke(100);
+    g.stroke(c);
 
     for (int x=0; x<WIDTH; x++) {
       h = sin(step) * a;
