@@ -97,6 +97,7 @@ public class Dacwes {
     udp.send(modeBuffer,address,port);
   }
   
+  int maxSentByte = 0;
   public void sendData() {
     PImage image = get();
     
@@ -105,7 +106,8 @@ public class Dacwes {
 //    }
       
     image.loadPixels();
-
+    loadPixels();
+    
     int r;
     int g;
     int b;
@@ -120,9 +122,11 @@ public class Dacwes {
         buffer[(getAddress(x,y)*3)+1] = byte(r);
         buffer[(getAddress(x,y)*3)+2] = byte(g);
         buffer[(getAddress(x,y)*3)+3] = byte(b);
+
+        
       }
     }
-
+    updatePixels();
     udp.send(buffer,address,port);
   }  
 }
