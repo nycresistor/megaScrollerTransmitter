@@ -21,7 +21,6 @@ Routine[] enabledRoutines = new Routine[] {
   new RadialStars(),
   new TargetScanner(),
   new Waterfalls(),
- // new FFT(),
   new RGBRoutine(),
   new FlashColors(),
   new FollowMouse()
