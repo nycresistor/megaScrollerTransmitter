@@ -3,6 +3,8 @@ import processing.opengl.*;
 import java.lang.reflect.Method;
 import hypermedia.net.*;
 import java.io.*;
+import ddf.minim.*;	  	
+import ddf.minim.analysis.*;
 
 int WIDTH = 25;
 int HEIGHT = 160;
@@ -12,20 +14,20 @@ String hostname = "127.0.0.1"; //"192.168.1.130";
 int TYPICAL_MODE_TIME = 30;
 
 Routine[] enabledRoutines = new Routine[] {
-  new Greetz(),
-  new Bursts(),
-  new Flash(),
-  new Lines(),
-  new OppositeLines(),
-  new Waves(),
-  new RadialStars(),
-  new NightSky(),
-  new TargetScanner(),
-  new Waterfalls(),
- // new FFT(),
-  new RGBRoutine(),
-  new FlashColors(),
-  new FollowMouse()
+  //  new Greetz(),
+  //  new Bursts(),
+  //  new Flash(),
+  //  new Lines(),
+  //  new OppositeLines(),
+  //  new Waves(),
+  //  new RadialStars(),
+  //  new NightSky(),
+  //  new TargetScanner(),
+  //  new Waterfalls(),
+  new FFTDemo(), 
+  //  new RGBRoutine(),
+  //  new FlashColors(),
+  //  new FollowMouse()
 };
 
 int w = 0;
@@ -48,16 +50,16 @@ int fadeInFrames = 0;
 
 void setup() {
   // Had to enable OPENGL for some reason new fonts don't work in JAVA2D.
-  size(WIDTH,HEIGHT);
+  size(WIDTH, HEIGHT);
 
   frameRate(FRAMERATE);
-  
+
   dacwes = new Dacwes(this, WIDTH, HEIGHT);
   dacwes.setAddress(hostname);
   dacwes.setAddressingMode(Dacwes.ADDRESSING_VERTICAL_NORMAL);  
 
   setMode(0);  
-  
+
   for (Routine r : enabledRoutines) {
     r.setup(this);
   }
@@ -79,7 +81,7 @@ void setMode(int newMode) {
   mode = newMode;
   modeFrameStart = frameCount;
   println("New mode " + currentRoutine.getClass().getName());
-  
+
   currentRoutine.reset();
 }
 
@@ -96,7 +98,7 @@ void newMode() {
   }
 
   setMode(newMode);
-//  dacwes.sendMode(enabledModes[newMode]);
+  //  dacwes.sendMode(enabledModes[newMode]);
 }
 
 void draw() {
@@ -125,8 +127,7 @@ void draw() {
     currentRoutine.isDone = false;
     newMode();
   }
-//  println(frameRate);
-  dacwes.sendData();  
+  //  println(frameRate);
+  dacwes.sendData();
 }
-
 
