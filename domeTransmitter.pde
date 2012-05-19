@@ -57,7 +57,7 @@ void setup() {
   
   dacwes = new Dacwes(this, WIDTH, HEIGHT);
   dacwes.setAddress(hostname);
-  dacwes.setAddressingMode(Dacwes.ADDRESSING_VERTICAL_NORMAL);  
+  dacwes.setAddressingMode(Dacwes.ADDRESSING_HORIZONTAL_NORMAL);  
 
   setMode(0);  
     

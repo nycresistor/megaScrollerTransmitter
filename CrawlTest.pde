@@ -9,8 +9,10 @@ class CrawlTest extends Routine {
   
   void draw() {
     background(0);
-    
-    x++;
+  
+    if (frameCount % 4 == 0) { 
+      x++;
+    }
     if (x>width) {
       x=0;
       y++;
