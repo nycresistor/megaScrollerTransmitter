@@ -1,13 +1,14 @@
 class Greetz extends Routine {
   int FONT_SIZE = 16;
   PFont font;
+  PImage imgCopy;
   String messages[] = new String[] {
-    "DISORIENT"//, 
+    "N Y C R"//, 
     //  "KOSTUME  KULT",
     //  "BLACK  LIGHT  BALL"
   //  "COUNTRY  CLUB"
   };  
-  String message = "DISORIENT";
+  String message = "N Y C R";
 
   void setup(PApplet parent) {
     super.setup(parent);
@@ -25,15 +26,18 @@ class Greetz extends Routine {
     }
     
     fill(255,128,64);
-    pushMatrix();
-      rotate(HALF_PI);
-      text(message, x, 0);
-    popMatrix();
-    
-    PImage i = get(0,40-FONT_SIZE,WIDTH,FONT_SIZE);
-    i.resize(WIDTH,FONT_SIZE*6);
-    image(i,0,40-FONT_SIZE);
+    text(message, x, FONT_SIZE);
   
+    if (height/2 > FONT_SIZE) {
+      
+      image(get(0,0,width,FONT_SIZE),0,20,width,height/2);
+      fill(0);
+      rect(0,0,width,FONT_SIZE);
+      //copy(0,0,width,FONT_SIZE,0,FONT_SIZE,width,FONT_SIZE/2);
+      //imgCopy = copy(0,0,width,FONT_SIZE);
+      //image(imgCopy,0,0,width,height);
+    }
+    
     if (frameCount % 2 == 0) {
       x = x - 1;
     }

@@ -1,19 +1,23 @@
+import ddf.minim.*;
+import ddf.minim.signals.*;
+import ddf.minim.analysis.*;
+import ddf.minim.effects.*;
+
 import codeanticode.gsvideo.*;
 import processing.opengl.*;
 import java.lang.reflect.Method;
 import hypermedia.net.*;
 import java.io.*;
 
-int WIDTH = 25;
+int WIDTH = 24;
 int HEIGHT = 160;
 boolean VERTICAL = false;
 int FRAMERATE = 30;
-String hostname = "127.0.0.1"; //"192.168.1.130";
+String hostname = "192.168.1.162"; //"127.0.0.1"; //"192.168.1.130";
 int TYPICAL_MODE_TIME = 30;
 
-Routine[] enabledRoutines = new Routine[] {/*
-  new Greetz(),
-  new Bursts(),
+Routine[] enabledRoutines = new Routine[] {
+/*  new Bursts(),
   new Flash(),
   new Lines(),
   new OppositeLines(),
@@ -25,8 +29,7 @@ Routine[] enabledRoutines = new Routine[] {/*
   new RGBRoutine(),
   new FlashColors(),
   new FollowMouse(),*/
-  
-  new CrawlTest()
+  new Greetz()
 };
 
 int w = 0;
