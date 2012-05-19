@@ -3,6 +3,8 @@ import processing.opengl.*;
 import java.lang.reflect.Method;
 import hypermedia.net.*;
 import java.io.*;
+import ddf.minim.*;	  	
+import ddf.minim.analysis.*;
 
 int WIDTH = 25;
 int HEIGHT = 160;
@@ -23,7 +25,8 @@ Routine[] enabledRoutines = new Routine[] {/*
   new TargetScanner(),
   new Waterfalls(),
   new RGBRoutine(),
-  new FlashColors(),*/
+  new FFTDemo(), 
+  new FlashColors(),
   new FollowMouse()
 };
 
@@ -49,10 +52,10 @@ WiiController controller;
 
 void setup() {
   // Had to enable OPENGL for some reason new fonts don't work in JAVA2D.
-  size(WIDTH,HEIGHT);
+  size(WIDTH, HEIGHT);
 
   frameRate(FRAMERATE);
-  
+
   dacwes = new Dacwes(this, WIDTH, HEIGHT);
   dacwes.setAddress(hostname);
   dacwes.setAddressingMode(Dacwes.ADDRESSING_VERTICAL_NORMAL);  
@@ -82,7 +85,7 @@ void setMode(int newMode) {
   mode = newMode;
   modeFrameStart = frameCount;
   println("New mode " + currentRoutine.getClass().getName());
-  
+
   currentRoutine.reset();
 }
 
@@ -99,7 +102,7 @@ void newMode() {
   }
 
   setMode(newMode);
-//  dacwes.sendMode(enabledModes[newMode]);
+  //  dacwes.sendMode(enabledModes[newMode]);
 }
 
 void draw() {
@@ -129,8 +132,7 @@ void draw() {
     currentRoutine.isDone = false;
     newMode();
   }
-//  println(frameRate);
-  dacwes.sendData();  
+  //  println(frameRate);
+  dacwes.sendData();
 }
-
 
