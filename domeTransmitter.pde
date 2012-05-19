@@ -11,7 +11,7 @@ int FRAMERATE = 30;
 String hostname = "127.0.0.1"; //"192.168.1.130";
 int TYPICAL_MODE_TIME = 30;
 
-Routine[] enabledRoutines = new Routine[] {
+Routine[] enabledRoutines = new Routine[] {/*
   new Greetz(),
   new Bursts(),
   new Flash(),
@@ -23,7 +23,7 @@ Routine[] enabledRoutines = new Routine[] {
   new TargetScanner(),
   new Waterfalls(),
   new RGBRoutine(),
-  new FlashColors(),
+  new FlashColors(),*/
   new FollowMouse()
 };
 
@@ -45,6 +45,8 @@ PGraphics fadeLayer;
 int fadeOutFrames = 0;
 int fadeInFrames = 0;
 
+WiiController controller;
+
 void setup() {
   // Had to enable OPENGL for some reason new fonts don't work in JAVA2D.
   size(WIDTH,HEIGHT);
@@ -56,6 +58,8 @@ void setup() {
   dacwes.setAddressingMode(Dacwes.ADDRESSING_VERTICAL_NORMAL);  
 
   setMode(0);  
+    
+  controller = new WiiController();
   
   for (Routine r : enabledRoutines) {
     r.setup(this);
@@ -108,6 +112,7 @@ void draw() {
     }
   }
   else if (currentRoutine != null) {
+    currentRoutine.predraw();
     currentRoutine.draw();
   }
   else {
