@@ -29,7 +29,8 @@ Routine[] enabledRoutines = new Routine[] {
   new RGBRoutine(),
   new FlashColors(),
   new FollowMouse(),*/
-  new Greetz()
+ // new Greetz(),
+ new WarpSpeedMrSulu()
 };
 
 int w = 0;
