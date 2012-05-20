@@ -6,28 +6,29 @@ import java.io.*;
 import ddf.minim.*;	  	
 import ddf.minim.analysis.*;
 
-int WIDTH = 25;
+int WIDTH = 24;
 int HEIGHT = 160;
 boolean VERTICAL = false;
 int FRAMERATE = 30;
 String hostname = "127.0.0.1"; //"192.168.1.130";
-int TYPICAL_MODE_TIME = 30;
+int TYPICAL_MODE_TIME = 300;
 
-Routine[] enabledRoutines = new Routine[] {/*
-  new Greetz(),
-  new Bursts(),
-  new Flash(),
-  new Lines(),
-  new OppositeLines(),
-  new Waves(),
-  new RadialStars(),
-  new NightSky(),
-  new TargetScanner(),
-  new Waterfalls(),
-  new RGBRoutine(),
-  new FFTDemo(), 
-  new FlashColors(),
-  new FollowMouse()
+Routine[] enabledRoutines = new Routine[] {
+  //  new Greetz(),
+  //  new Bursts(),
+  //  new FlashColors(),      /* rainbow */
+    new Flash(),            /* seizure mode */
+  //  new Lines(),            /* boring */
+  //  new OppositeLines(),    /* boring */
+  //  new Waves(),            /* ? */
+    new HorizonScan(),
+  //  new RadialStars(),
+  //  new NightSky(),
+  //  new TargetScanner(),
+  //  new Waterfalls(),
+  //  new RGBRoutine(), 
+  //  new FFTDemo(), 
+  //  new FollowMouse()
 };
 
 int w = 0;
@@ -61,9 +62,9 @@ void setup() {
   dacwes.setAddressingMode(Dacwes.ADDRESSING_VERTICAL_NORMAL);  
 
   setMode(0);  
-    
+
   controller = new WiiController();
-  
+
   for (Routine r : enabledRoutines) {
     r.setup(this);
   }
@@ -86,7 +87,7 @@ void setMode(int newMode) {
   modeFrameStart = frameCount;
   println("New mode " + currentRoutine.getClass().getName());
 
-  currentRoutine.reset();
+//  currentRoutine.reset();
 }
 
 void newMode() {
