@@ -81,10 +81,40 @@ public class Dacwes {
   
   private int getAddress(int x, int y) {
     if (addressingMode == ADDRESSING_VERTICAL_NORMAL) {
+      return (x * h + y);
+    }
+    else if (addressingMode == ADDRESSING_VERTICAL_HALF) {
+      return ((y % pixelsPerChannel) + floor(y / pixelsPerChannel)*pixelsPerChannel*w + x*pixelsPerChannel);
+    }
+    else if (addressingMode == ADDRESSING_VERTICAL_FLIPFLOP) {
+      if (y>=pixelsPerChannel) {
+        int endAddress = (x+1) * h - 1;
+        int address = endAddress - (y % pixelsPerChannel);
+        return address;
+      }
+      else {
+        return (x * h + y);
+      }
+    }
+    else if (addressingMode == ADDRESSING_HORIZONTAL_NORMAL) {
       return (y * w + x);
     }
+    else if (addressingMode == ADDRESSING_HORIZONTAL_HALF) {
+      return ((x % pixelsPerChannel) + floor(x / pixelsPerChannel)*pixelsPerChannel*h + y*pixelsPerChannel);
+    }
+    else if (addressingMode == ADDRESSING_HORIZONTAL_FLIPFLOP) {
+      if (x>=pixelsPerChannel) {
+        int endAddress = (y+1) * w - 1;
+        int address = endAddress - (x % pixelsPerChannel);
+        return address;
+      }
+      else {
+        return (y * h + x);
+      }
+    }
+  
     return 0;
-  }    
+  }      
   
   public void sendMode(String modeName) {
     byte modeBuffer[] = new byte[modeName.length()+1];

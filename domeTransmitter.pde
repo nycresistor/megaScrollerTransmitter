@@ -1,10 +1,13 @@
+import ddf.minim.*;
+import ddf.minim.signals.*;
+import ddf.minim.analysis.*;
+import ddf.minim.effects.*;
+
 import codeanticode.gsvideo.*;
 import processing.opengl.*;
 import java.lang.reflect.Method;
 import hypermedia.net.*;
 import java.io.*;
-import ddf.minim.*;	  	
-import ddf.minim.analysis.*;
 
 int WIDTH = 24;
 int HEIGHT = 160;
@@ -53,13 +56,13 @@ WiiController controller;
 
 void setup() {
   // Had to enable OPENGL for some reason new fonts don't work in JAVA2D.
-  size(WIDTH, HEIGHT);
+  size(WIDTH,HEIGHT);
 
   frameRate(FRAMERATE);
-
+  
   dacwes = new Dacwes(this, WIDTH, HEIGHT);
   dacwes.setAddress(hostname);
-  dacwes.setAddressingMode(Dacwes.ADDRESSING_VERTICAL_NORMAL);  
+  dacwes.setAddressingMode(Dacwes.ADDRESSING_HORIZONTAL_NORMAL);  
 
   setMode(0);  
 
@@ -88,6 +91,7 @@ void setMode(int newMode) {
   println("New mode " + currentRoutine.getClass().getName());
 
 //  currentRoutine.reset();
+
 }
 
 void newMode() {
@@ -103,7 +107,7 @@ void newMode() {
   }
 
   setMode(newMode);
-  //  dacwes.sendMode(enabledModes[newMode]);
+//  dacwes.sendMode(enabledModes[newMode]);
 }
 
 void draw() {
@@ -133,7 +137,8 @@ void draw() {
     currentRoutine.isDone = false;
     newMode();
   }
-  //  println(frameRate);
-  dacwes.sendData();
+//  println(frameRate);
+  dacwes.sendData();  
 }
+
 
