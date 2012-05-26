@@ -3,7 +3,7 @@ import ddf.minim.signals.*;
 import ddf.minim.analysis.*;
 import ddf.minim.effects.*;
 
-import codeanticode.gsvideo.*;
+//import codeanticode.gsvideo.*;
 import processing.opengl.*;
 import java.lang.reflect.Method;
 import hypermedia.net.*;
@@ -19,12 +19,12 @@ int TYPICAL_MODE_TIME = 300;
 Routine[] enabledRoutines = new Routine[] {
   //  new Greetz(),
   //  new Bursts(),
-  //  new FlashColors(),      /* rainbow */
+    new FlashColors(),      /* rainbow */
     new Flash(),            /* seizure mode */
   //  new Lines(),            /* boring */
   //  new OppositeLines(),    /* boring */
-  //  new Waves(),            /* ? */
-    new HorizonScan(),
+    new Waves(),            /* ? */
+  //  new HorizonScan(),
   //  new RadialStars(),
   //  new NightSky(),
   //  new TargetScanner(),
