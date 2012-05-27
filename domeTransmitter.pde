@@ -15,21 +15,24 @@ boolean VERTICAL = false;
 int FRAMERATE = 100;
 String hostname = "127.0.0.1"; //"192.168.1.130";
 int TYPICAL_MODE_TIME = 300;
-
 Routine drop = new Seizure();
 
 Routine[] enabledRoutines = new Routine[] {
-  //  new Bursts(), // Broken
-    new Chase(),
-    new FFTDemo(), 
-  //  new FollowWii(), // Broken
-  //  new Greetz(),
-  //  new NightSky(),
-    new RainbowColors(),
-  //  new RGBRoutine(), 
-  //  new Seizure(),
-    new WarpSpeedMrSulu(),
-    new Waves(),
+/*  new Bursts(),
+  new Flash(),
+  new Lines(),
+  new OppositeLines(),
+  new Waves(),
+  new RadialStars(),
+  new NightSky(),
+  new TargetScanner(),
+  new Waterfalls(),
+  new RGBRoutine(),
+  new FlashColors(),
+  new FollowMouse()
+  new Greetz()*/
+  
+  new Pong()
 };
 
 int w = 0;
@@ -63,9 +66,9 @@ void setup() {
   dacwes.setAddressingMode(Dacwes.ADDRESSING_HORIZONTAL_NORMAL);  
 
   setMode(0);  
-
+    
   controller = new WiiController();
-
+  
   for (Routine r : enabledRoutines) {
     r.setup(this);
   }
@@ -86,9 +89,8 @@ void setMode(int newMode) {
   mode = newMode;
   modeFrameStart = frameCount;
   println("New mode " + currentRoutine.getClass().getName());
-
-//  currentRoutine.reset();
-
+  
+  currentRoutine.reset();
 }
 
 void newMode() {
