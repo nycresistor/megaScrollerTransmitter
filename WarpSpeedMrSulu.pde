@@ -56,7 +56,8 @@ class WarpStar {
     point(x, y);
 
     for (int i=0; i<len; i++) {
-      stroke(255 >> i / 2);
+      float intensity = 255 >> i / 2;
+      stroke(intensity);
       point(x, y - i);
     }
 

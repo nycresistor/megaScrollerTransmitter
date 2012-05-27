@@ -12,23 +12,24 @@ import java.io.*;
 int WIDTH = 24;
 int HEIGHT = 160;
 boolean VERTICAL = false;
-int FRAMERATE = 30;
+int FRAMERATE = 100;
 String hostname = "127.0.0.1"; //"192.168.1.130";
 int TYPICAL_MODE_TIME = 300;
 
+Routine drop = new Seizure();
+
 Routine[] enabledRoutines = new Routine[] {
   //  new Bursts(), // Broken
-  //  new Chase(),
-  //  new FFTDemo(), 
-  //  new FollowWii(),
+    new Chase(),
+    new FFTDemo(), 
+  //  new FollowWii(), // Broken
   //  new Greetz(),
   //  new NightSky(),
-  //  new RainbowColors(),
+    new RainbowColors(),
   //  new RGBRoutine(), 
   //  new Seizure(),
-  //  new WarpSpeedMrSulu(),
-    new Waterfalls(),
-  //  new Waves(),
+    new WarpSpeedMrSulu(),
+    new Waves(),
 };
 
 int w = 0;
@@ -108,6 +109,11 @@ void newMode() {
 }
 
 void draw() {
+//  if (controller.buttonA) {
+//    drop.draw();
+//  }
+//  else {
+  
   if (fadeOutFrames > 0) {
     fadeOutFrames--;
     blend(fadeLayer, 0, 0, WIDTH, HEIGHT, 0, 0, WIDTH, HEIGHT, MULTIPLY);
@@ -134,6 +140,9 @@ void draw() {
     currentRoutine.isDone = false;
     newMode();
   }
+  
+//  }
+  
 //  println(frameRate);
   dacwes.sendData();  
 }

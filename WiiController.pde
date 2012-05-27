@@ -101,9 +101,9 @@ class WiiController {
     osc.plug(this,"wiiosc_buttonHome",  "/wii/keys/home");// i
     osc.plug(this,"wiiosc_buttonOne",   "/wii/keys/one");// i
     osc.plug(this,"wiiosc_buttonTwo",   "/wii/keys/two");// i
-    osc.plug(this,"wiiosc_accX",        "/wii/acc/x");// i
-    osc.plug(this,"wiiosc_accY",        "/wii/acc/y");// i
-    osc.plug(this,"wiiosc_accZ",        "/wii/acc/z");// i
+//    osc.plug(this,"wiiosc_accX",        "/wii/acc/x");// i
+//    osc.plug(this,"wiiosc_accY",        "/wii/acc/y");// i
+//    osc.plug(this,"wiiosc_accZ",        "/wii/acc/z");// i
   }
   
   void accX(int id, float value) { acc.x = value;}
@@ -116,7 +116,7 @@ class WiiController {
   
   
   void oscEvent(OscMessage theEvent) {
-    println(theEvent.addrPattern()+"/ "+theEvent.typetag());
+//    println(theEvent.addrPattern()+"/ "+theEvent.typetag());
   }
   
   void acceleration(float theX, float theY, float theZ) {
@@ -195,7 +195,10 @@ class WiiController {
   void wiiosc_buttonLeft (int id, int theValue) {buttonLeft (theValue);}
   void wiiosc_buttonRight(int id, int theValue) {buttonRight(theValue);}
   void wiiosc_buttonHome (int id, int theValue) {buttonHome (theValue);}
-  
+
+//  void wiiosc_accX (int id, int theValue) {acc.x = theX;}
+//  void wiiosc_accY (int id, int theValue) {}
+//  void wiiosc_accZ (int id, int theValue) {buttonHome (theValue);}  
   
   void buttonA(int theValue) {
     buttonA = (theValue==1) ? true:false;
