@@ -17,21 +17,18 @@ String hostname = "127.0.0.1"; //"192.168.1.130";
 int TYPICAL_MODE_TIME = 300;
 
 Routine[] enabledRoutines = new Routine[] {
-  //  new Greetz(),
-  //  new Bursts(),
-    new FlashColors(),      /* rainbow */
-    new Flash(),            /* seizure mode */
-  //  new Lines(),            /* boring */
-  //  new OppositeLines(),    /* boring */
-    new Waves(),            /* ? */
-  //  new HorizonScan(),
-  //  new RadialStars(),
-  //  new NightSky(),
-  //  new TargetScanner(),
-  //  new Waterfalls(),
-  //  new RGBRoutine(), 
+  //  new Bursts(), // Broken
+  //  new Chase(),
   //  new FFTDemo(), 
-  //  new FollowMouse()
+  //  new FollowWii(),
+  //  new Greetz(),
+  //  new NightSky(),
+  //  new RainbowColors(),
+  //  new RGBRoutine(), 
+  //  new Seizure(),
+  //  new WarpSpeedMrSulu(),
+    new Waterfalls(),
+  //  new Waves(),
 };
 
 int w = 0;

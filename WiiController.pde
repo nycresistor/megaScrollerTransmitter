@@ -101,8 +101,14 @@ class WiiController {
     osc.plug(this,"wiiosc_buttonHome",  "/wii/keys/home");// i
     osc.plug(this,"wiiosc_buttonOne",   "/wii/keys/one");// i
     osc.plug(this,"wiiosc_buttonTwo",   "/wii/keys/two");// i
- 
+    osc.plug(this,"wiiosc_accX",        "/wii/acc/x");// i
+    osc.plug(this,"wiiosc_accY",        "/wii/acc/y");// i
+    osc.plug(this,"wiiosc_accZ",        "/wii/acc/z");// i
   }
+  
+  void accX(int id, float value) { acc.x = value;}
+  void accY(int id, float value) { acc.y = value;}
+  void accZ(int id, float value) { acc.z = value;}
 
   void connected(int theValue) {
     isConnected = (theValue==0) ? false:true;
@@ -110,7 +116,7 @@ class WiiController {
   
   
   void oscEvent(OscMessage theEvent) {
-//    println(theEvent.addrPattern()+"/ "+theEvent.typetag());
+    println(theEvent.addrPattern()+"/ "+theEvent.typetag());
   }
   
   void acceleration(float theX, float theY, float theZ) {
