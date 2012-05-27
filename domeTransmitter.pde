@@ -3,7 +3,7 @@ import ddf.minim.signals.*;
 import ddf.minim.analysis.*;
 import ddf.minim.effects.*;
 
-import codeanticode.gsvideo.*;
+//import codeanticode.gsvideo.*;
 import processing.opengl.*;
 import java.lang.reflect.Method;
 import hypermedia.net.*;
@@ -12,26 +12,24 @@ import java.io.*;
 int WIDTH = 24;
 int HEIGHT = 160;
 boolean VERTICAL = false;
-int FRAMERATE = 30;
+int FRAMERATE = 100;
 String hostname = "127.0.0.1"; //"192.168.1.130";
 int TYPICAL_MODE_TIME = 300;
 
+Routine drop = new Seizure();
+
 Routine[] enabledRoutines = new Routine[] {
+  //  new Bursts(), // Broken
+    new Chase(),
+    new FFTDemo(), 
+  //  new FollowWii(), // Broken
   //  new Greetz(),
-  //  new Bursts(),
-  //  new FlashColors(),      /* rainbow */
-    new Flash(),            /* seizure mode */
-  //  new Lines(),            /* boring */
-  //  new OppositeLines(),    /* boring */
-  //  new Waves(),            /* ? */
-    new HorizonScan(),
-  //  new RadialStars(),
   //  new NightSky(),
-  //  new TargetScanner(),
-  //  new Waterfalls(),
+    new RainbowColors(),
   //  new RGBRoutine(), 
-  //  new FFTDemo(), 
-  //  new FollowMouse()
+  //  new Seizure(),
+    new WarpSpeedMrSulu(),
+    new Waves(),
 };
 
 int w = 0;
@@ -109,6 +107,11 @@ void newMode() {
 }
 
 void draw() {
+//  if (controller.buttonA) {
+//    drop.draw();
+//  }
+//  else {
+  
   if (fadeOutFrames > 0) {
     fadeOutFrames--;
     blend(fadeLayer, 0, 0, WIDTH, HEIGHT, 0, 0, WIDTH, HEIGHT, MULTIPLY);
@@ -135,6 +138,9 @@ void draw() {
     currentRoutine.isDone = false;
     newMode();
   }
+  
+//  }
+  
 //  println(frameRate);
   dacwes.sendData();  
 }

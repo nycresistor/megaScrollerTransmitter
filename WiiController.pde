@@ -65,7 +65,7 @@ class WiiController {
     nAcc = new Acceleration();
     ir = new IRdata[4];
     
-    
+    // Darwiin messages
     osc.plug(this,"connected","/wii/connected");// i
     osc.plug(this,"mousemode","/wii/mousemode");// i
     osc.plug(this,"buttonA","/wii/button/a");// i
@@ -88,7 +88,27 @@ class WiiController {
     osc.plug(this,"buttonC","/nunchuk/button/c");
     osc.plug(this,"nunchukAcceleration","/nunchuk/acc");
     osc.plug(this,"nunchukOrientation","/nunchuk/orientation");
+
+    // Wiiosc messages
+    osc.plug(this,"wiiosc_buttonA",     "/wii/keys/a");
+    osc.plug(this,"wiiosc_buttonB",     "/wii/keys/b");
+    osc.plug(this,"wiiosc_buttonUp",    "/wii/keys/up");// i
+    osc.plug(this,"wiiosc_buttonDown",  "/wii/keys/down");// i
+    osc.plug(this,"wiiosc_buttonLeft",  "/wii/keys/left");// i
+    osc.plug(this,"wiiosc_buttonRight", "/wii/keys/right");// i
+    osc.plug(this,"wiiosc_buttonMinus", "/wii/keys/minus");// i
+    osc.plug(this,"wiiosc_buttonPlus",  "/wii/keys/plus");// i
+    osc.plug(this,"wiiosc_buttonHome",  "/wii/keys/home");// i
+    osc.plug(this,"wiiosc_buttonOne",   "/wii/keys/one");// i
+    osc.plug(this,"wiiosc_buttonTwo",   "/wii/keys/two");// i
+//    osc.plug(this,"wiiosc_accX",        "/wii/acc/x");// i
+//    osc.plug(this,"wiiosc_accY",        "/wii/acc/y");// i
+//    osc.plug(this,"wiiosc_accZ",        "/wii/acc/z");// i
   }
+  
+  void accX(int id, float value) { acc.x = value;}
+  void accY(int id, float value) { acc.y = value;}
+  void accZ(int id, float value) { acc.z = value;}
 
   void connected(int theValue) {
     isConnected = (theValue==0) ? false:true;
@@ -163,7 +183,23 @@ class WiiController {
       println("NUNCHUCK orientation roll:"+roll+"   pitch:"+pitch);
     }
   }
+  
+  void wiiosc_buttonA    (int id, int theValue) {buttonA    (theValue);}
+  void wiiosc_buttonB    (int id, int theValue) {buttonB    (theValue);}
+  void wiiosc_buttonOne  (int id, int theValue) {buttonOne  (theValue);}
+  void wiiosc_buttonTwo  (int id, int theValue) {buttonTwo  (theValue);}
+  void wiiosc_buttonMinus(int id, int theValue) {buttonMinus(theValue);}
+  void wiiosc_buttonPlus (int id, int theValue) {buttonPlus (theValue);}
+  void wiiosc_buttonUp   (int id, int theValue) {buttonUp   (theValue);}
+  void wiiosc_buttonDown (int id, int theValue) {buttonDown (theValue);}
+  void wiiosc_buttonLeft (int id, int theValue) {buttonLeft (theValue);}
+  void wiiosc_buttonRight(int id, int theValue) {buttonRight(theValue);}
+  void wiiosc_buttonHome (int id, int theValue) {buttonHome (theValue);}
 
+//  void wiiosc_accX (int id, int theValue) {acc.x = theX;}
+//  void wiiosc_accY (int id, int theValue) {}
+//  void wiiosc_accZ (int id, int theValue) {buttonHome (theValue);}  
+  
   void buttonA(int theValue) {
     buttonA = (theValue==1) ? true:false;
   }
@@ -181,8 +217,7 @@ class WiiController {
   }
 
   void buttonMinus(int theValue) {
-    buttonMinus = (theValue==1) ? true:
-    false;
+    buttonMinus = (theValue==1) ? true:false;
   }
 
   void buttonPlus(int theValue) {
@@ -196,13 +231,13 @@ class WiiController {
   void buttonDown(int theValue) {
     buttonDown = (theValue==1) ? true:false;
   }
-
-  void buttonC(int theValue) {
-    buttonC = (theValue==1) ? true:false;
+  
+  void buttonLeft(int theValue) {
+    buttonLeft = (theValue==1)  ? true:false;
   }
 
-  void buttonZ(int theValue) {
-    buttonZ = (theValue==1) ? true:false;
+  void buttonRight(int theValue) {
+    buttonRight = (theValue==1) ? true:false;
   }
 
   void buttonHome(int theValue) {
@@ -222,9 +257,6 @@ class WiiController {
   class IRdata {
     float x,y,s;
   }
-
-
-
 
   void requestBatterylevel() {
     osc.send("/wii/batterylevel",new Object[] {},remoteAddress,remotePort);

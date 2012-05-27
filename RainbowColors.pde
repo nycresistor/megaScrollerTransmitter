@@ -1,4 +1,4 @@
-class FlashColors extends Routine {
+class RainbowColors extends Routine {
   void draw() {
     long frame = frameCount - modeFrameStart;
   
@@ -9,8 +9,13 @@ class FlashColors extends Routine {
     
     for(int x = 0; x < width; x++) {
       for(int y = 0; y < height; y++) {
-        stroke((x*y+frame*4)%100,90,90);
-        point(x,y);
+        if (x < width/2) {
+          stroke((pow(x,0.3)*pow(y,.8)+frame*0.25)%100,90,90);
+        }
+        else {
+          stroke((pow(width-x,0.3)*pow(y,.8)+frame*0.25)%100,90,90);
+        }
+        point((x+frame*0.25)%width,y);
       }
     }
     
