@@ -83,7 +83,6 @@ void setFadeLayer(int g) {
 }
 
 void setMode(int newMode) {
-  //String methodName = enabledModes[newMode];
   currentRoutine = enabledRoutines[newMode];
 
   mode = newMode;
@@ -107,7 +106,6 @@ void newMode() {
   }
 
   setMode(newMode);
-//  dacwes.sendMode(enabledModes[newMode]);
 }
 
 void draw() {
@@ -140,5 +138,4 @@ void draw() {
 //  println(frameRate);
   dacwes.sendData();  
 }
-
 
