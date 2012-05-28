@@ -2,8 +2,7 @@ class Seizure extends Routine {
   int count = 0;
   
   void draw() {
-    long frame = frameCount - modeFrameStart;
-  
+    /*  
     if (count == 0) {
       background(0,0,0);
     }
@@ -12,9 +11,9 @@ class Seizure extends Routine {
     }
     
     count = (count + 1) % 2;
-  
-//    if (frame > FRAMERATE*TYPICAL_MODE_TIME) {
-//      newMode();
-//    }
+    */
+    
+    // Four blinks per second.
+    background(frameCount / (int(frameRate)/4) % 2 == 0 ? color(255,128,0) : color(255,64,64));
   }
 }

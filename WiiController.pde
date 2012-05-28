@@ -107,18 +107,20 @@ class WiiController {
   }
   
   void wiiosc_accX(int id, float value) {
-    acc.x = 10*value-5;
+    // value goes from .4 (-90) to .6 (90)
+    acc.x = (value-.5)*10;
   }
   
   void wiiosc_accY(int id, float value) {
-    acc.z = 10*value-5;
+    acc.y = (value-.5)*10;
   }
   
   void wiiosc_accZ(int id, float value) {
-    acc.z = 10*value-5;
+    acc.z = (value-.5)*10;
     
     pitch = (float) Math.atan2(acc.y, acc.z)*(180/3.14);
     roll = (float) Math.atan2(acc.x, acc.z)*(180/3.14);
+    println(roll);
   }
 
   void connected(int theValue) {

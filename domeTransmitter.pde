@@ -16,8 +16,11 @@ int FRAMERATE = 100;
 String hostname = "127.0.0.1"; //"192.168.1.130";
 int TYPICAL_MODE_TIME = 300;
 Routine drop = new Seizure();
+Routine pong = new Pong();
 
 Routine[] enabledRoutines = new Routine[] {
+//  new Warp(new WarpSpeedMrSulu(), false, true, 0.25, 0.25)
+  new Warp(null, true, false, 0.5, 0.5)
 /*  new Bursts(),
   new Flash(),
   new Lines(),
@@ -31,8 +34,6 @@ Routine[] enabledRoutines = new Routine[] {
   new FlashColors(),
   new FollowMouse()
   new Greetz()*/
-  
-  new Pong()
 };
 
 int w = 0;
@@ -109,36 +110,42 @@ void newMode() {
 }
 
 void draw() {
-//  if (controller.buttonA) {
-//    drop.draw();
-//  }
-//  else {
-  
-  if (fadeOutFrames > 0) {
-    fadeOutFrames--;
-    blend(fadeLayer, 0, 0, WIDTH, HEIGHT, 0, 0, WIDTH, HEIGHT, MULTIPLY);
-
-    if (fadeOutFrames == 0) {
-      fadeInFrames = FRAMERATE;
-    }
+  if (((keyPressed && key == '1') || (controller.buttonOne && controller.buttonTwo)) && currentRoutine != pong) {
+    currentRoutine = pong;
+    pong.setup(this);
   }
-  else if (currentRoutine != null) {
-    currentRoutine.predraw();
-    currentRoutine.draw();
+
+  if (controller.buttonA || (keyPressed && key == 'a')) {
+    drop.draw();
   }
   else {
-    println("Current method is null");
-  }
+  
+    if (fadeOutFrames > 0) {
+      fadeOutFrames--;
+      blend(fadeLayer, 0, 0, WIDTH, HEIGHT, 0, 0, WIDTH, HEIGHT, MULTIPLY);
 
-  if (fadeInFrames > 0) {
-    setFadeLayer(240 - fadeInFrames*8);
-    blend(fadeLayer, 0, 0, WIDTH, HEIGHT, 0, 0, WIDTH, HEIGHT, MULTIPLY);
-    fadeInFrames--;
-  }
+      if (fadeOutFrames == 0) {
+        fadeInFrames = FRAMERATE;
+      }
+    }
+    else if (currentRoutine != null) {
+      currentRoutine.predraw();
+      currentRoutine.draw();
+    }
+    else {
+      println("Current method is null");
+    }
 
-  if (currentRoutine.isDone) {
-    currentRoutine.isDone = false;
-    newMode();
+    if (fadeInFrames > 0) {
+      setFadeLayer(240 - fadeInFrames*8);
+      blend(fadeLayer, 0, 0, WIDTH, HEIGHT, 0, 0, WIDTH, HEIGHT, MULTIPLY);
+      fadeInFrames--;
+    }
+
+    if (currentRoutine.isDone) {
+      currentRoutine.isDone = false;
+      newMode();
+    }
   }
   
 //  }
