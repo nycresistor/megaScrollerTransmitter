@@ -16,7 +16,7 @@ class Pong extends Routine {
     ballX = 0;
     ballAngle = radians(45);
     deathLeft = false;
-    ballSpeed = 0.25;
+    ballSpeed = 0.125;
     lives = 3;
 
     paddleX = width/2;

@@ -19,21 +19,15 @@ Routine drop = new Seizure();
 Routine pong = new Pong();
 
 Routine[] enabledRoutines = new Routine[] {
-//  new Warp(new WarpSpeedMrSulu(), false, true, 0.25, 0.25)
-  new Warp(null, true, false, 0.5, 0.5)
-/*  new Bursts(),
-  new Flash(),
-  new Lines(),
-  new OppositeLines(),
-  new Waves(),
-  new RadialStars(),
+ new Warp(new WarpSpeedMrSulu(), false, true, 0.5, 0.5),
+  new Warp(null, true, false, 0.5, 0.5),
+//  new Bursts(),  // broken
+  new Chase(),
+  new Fire(),
   new NightSky(),
-  new TargetScanner(),
-  new Waterfalls(),
   new RGBRoutine(),
-  new FlashColors(),
-  new FollowMouse()
-  new Greetz()*/
+  new RainbowColors(),
+  new Waves(),
 };
 
 int w = 0;

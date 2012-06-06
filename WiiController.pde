@@ -120,7 +120,6 @@ class WiiController {
     
     pitch = (float) Math.atan2(acc.y, acc.z)*(180/3.14);
     roll = (float) Math.atan2(acc.x, acc.z)*(180/3.14);
-    println(roll);
   }
 
   void connected(int theValue) {
