@@ -20,14 +20,22 @@ Routine pong = new Pong();
 
 Routine[] enabledRoutines = new Routine[] {
  new Warp(new WarpSpeedMrSulu(), false, true, 0.5, 0.5),
-  new Warp(null, true, false, 0.5, 0.5),
+//  new Warp(null, true, false, 0.5, 0.5),
 //  new Bursts(),  // broken
-  new Chase(),
-  new Fire(),
-  new NightSky(),
-  new RGBRoutine(),
-  new RainbowColors(),
-  new Waves(),
+//  new Chase(),
+//  new Fire(),
+//  new Flash(),
+//  new Lines(),
+//  new OppositeLines(),
+//  new Waves(),
+//  new RadialStars(),
+//  new NightSky(),
+//  new RGBRoutine(),
+//  new RainbowColors(),
+//  new Waves(),
+//  new FlashColors(),
+//  new FollowMouse(),
+//  new Greetz(),
 };
 
 int w = 0;
@@ -42,7 +50,7 @@ int direction = 1;
 int position = 0;
 Routine currentRoutine = null;
 
-Dacwes dacwes;
+Sculpture sculpture;
 
 PGraphics fadeLayer;
 int fadeOutFrames = 0;
@@ -56,9 +64,10 @@ void setup() {
 
   frameRate(FRAMERATE);
   
-  dacwes = new Dacwes(this, WIDTH, HEIGHT);
-  dacwes.setAddress(hostname);
-  dacwes.setAddressingMode(Dacwes.ADDRESSING_HORIZONTAL_NORMAL);  
+  sculpture = new Sculpture(this, WIDTH, HEIGHT, true);
+  sculpture.setAddress(hostname);
+  sculpture.setAddressingMode(Sculpture.ADDRESSING_HORIZONTAL_NORMAL);  
+  sculpture.setEnableGammaCorrection(true);
 
   setMode(0);  
     
@@ -66,7 +75,7 @@ void setup() {
   
   for (Routine r : enabledRoutines) {
     r.setup(this);
-  }
+  }  
 }
 
 void setFadeLayer(int g) {
@@ -145,6 +154,6 @@ void draw() {
 //  }
   
 //  println(frameRate);
-  dacwes.sendData();  
+  sculpture.sendData();  
 }
 
