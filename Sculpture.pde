@@ -28,14 +28,14 @@ import hypermedia.net.*;
  *
  **/
 
-public class Dacwes {
+public class Sculpture {
   public static final int ADDRESSING_VERTICAL_NORMAL = 1;
   public static final int ADDRESSING_VERTICAL_HALF = 2;
   public static final int ADDRESSING_VERTICAL_FLIPFLOP = 3;
   public static final int ADDRESSING_HORIZONTAL_NORMAL = 4;
   public static final int ADDRESSING_HORIZONTAL_HALF = 5;
   public static final int ADDRESSING_HORIZONTAL_FLIPFLOP = 6;
-  
+
   PApplet parent;
   UDP udp;
   String address;
@@ -45,19 +45,24 @@ public class Dacwes {
   int addressingMode;
   byte buffer[];
   int pixelsPerChannel;
+  float gammaValue = 2.5;
+  boolean enableGammaCorrection = false;
+  boolean isRGB = false;
 
-  public Dacwes(PApplet parent, int w, int h) {
+  public Sculpture(PApplet parent, int w, int h, boolean isRGB) {
     this.parent = parent;
     this.udp = new UDP(parent);
     this.address = "192.168.1.130";
     this.port = 58082;
     this.w = w;
     this.h = h;
-    int bufferSize = 3*(w*h)+1;
+    this.isRGB = isRGB;
+    int bufferSize = (isRGB ? 3 : 1)*(w*h)+1;
     buffer = new byte[bufferSize];
     this.addressingMode = ADDRESSING_VERTICAL_NORMAL;
+    // TODO Detect this based on VERTICAL (h/2) vs. HORIZONTAL (w/2)
     this.pixelsPerChannel = 8;
-    
+
     for (int i=0; i<bufferSize; i++) {
       buffer[i] = 0;
     }
@@ -70,15 +75,23 @@ public class Dacwes {
   public void setPort(int port) {
     this.port = port;
   }
-  
+
   public void setAddressingMode(int mode) {
     this.addressingMode = mode;
   }
-  
+
   public void setPixelsPerChannel(int n) {
     this.pixelsPerChannel = n;
   }
-  
+
+  public void setGammaValue(float gammaValue) {
+    this.gammaValue = gammaValue;
+  }
+
+  public void setEnableGammaCorrection(boolean enableGammaCorrection) {
+    this.enableGammaCorrection = enableGammaCorrection;
+  }
+
   private int getAddress(int x, int y) {
     if (addressingMode == ADDRESSING_VERTICAL_NORMAL) {
       return (x * h + y);
@@ -112,53 +125,67 @@ public class Dacwes {
         return (y * h + x);
       }
     }
-  
+
     return 0;
   }      
-  
+
   public void sendMode(String modeName) {
     byte modeBuffer[] = new byte[modeName.length()+1];
-    
+
     modeBuffer[0] = 2;
-    for(int i = 0; i < modeName.length(); i++) {
+    for (int i = 0; i < modeName.length(); i++) {
       modeBuffer[i+1] = (byte)modeName.charAt(i);
     }
-    
-    udp.send(modeBuffer,address,port);
+
+    udp.send(modeBuffer, address, port);
   }
-  
+
   int maxSentByte = 0;
   public void sendData() {
     PImage image = get();
-    
-//    if (image.width != w || image.height != h) {
-//      image.resize(w,h);
-//    }
-      
+
+    //    if (image.width != w || image.height != h) {
+    //      image.resize(w,h);
+    //    }
+
     image.loadPixels();
     loadPixels();
-    
+
     int r;
     int g;
     int b;
     buffer[0] = 1;
     for (int y=0; y<h; y++) {
       for (int x=0; x<w; x++) {
-        //r = int(brightness(image.pixels[y*w+x]));
-        r = int(red(image.pixels[y*w+x]));
-        g = int(green(image.pixels[y*w+x]));
-        b = int(blue(image.pixels[y*w+x]));
-        
-        buffer[(getAddress(x,y)*3)+1] = byte(r);
-        buffer[(getAddress(x,y)*3)+2] = byte(g);
-        buffer[(getAddress(x,y)*3)+3] = byte(b);
 
-        
+        if (isRGB) {
+          r = int(red(image.pixels[y*w+x]));
+          g = int(green(image.pixels[y*w+x]));
+          b = int(blue(image.pixels[y*w+x]));
+          
+          if (enableGammaCorrection) {
+            r = (int)(Math.pow(r/256.0,this.gammaValue)*256);
+            g = (int)(Math.pow(g/256.0,this.gammaValue)*256);
+            b = (int)(Math.pow(b/256.0,this.gammaValue)*256);
+          }
+          
+          buffer[(getAddress(x, y)*3)+1] = byte(r);
+          buffer[(getAddress(x, y)*3)+2] = byte(g);
+          buffer[(getAddress(x, y)*3)+3] = byte(b);
+        }
+        else {
+          r = int(brightness(image.pixels[y*w+x]));
+
+          if (enableGammaCorrection) {
+            r = (int)(Math.pow(r/256.0,this.gammaValue)*256);
+          }
+
+          buffer[(getAddress(x, y)+1)] = byte(r);
+        }
       }
     }
     updatePixels();
-    udp.send(buffer,address,port);
-  }  
+    udp.send(buffer, address, port);
+  }
 }
-  
 

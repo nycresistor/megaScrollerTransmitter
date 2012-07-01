@@ -42,7 +42,7 @@ int direction = 1;
 int position = 0;
 Routine currentRoutine = null;
 
-Dacwes dacwes;
+Sculpture sculpture;
 
 PGraphics fadeLayer;
 int fadeOutFrames = 0;
@@ -55,10 +55,11 @@ void setup() {
   size(WIDTH, HEIGHT);
 
   frameRate(FRAMERATE);
-
-  dacwes = new Dacwes(this, WIDTH, HEIGHT);
-  dacwes.setAddress(hostname);
-  dacwes.setAddressingMode(Dacwes.ADDRESSING_HORIZONTAL_NORMAL);  
+  
+  sculpture = new Sculpture(this, WIDTH, HEIGHT, true);
+  sculpture.setAddress(hostname);
+  sculpture.setAddressingMode(Sculpture.ADDRESSING_HORIZONTAL_NORMAL);  
+  sculpture.setEnableGammaCorrection(true);
 
   setMode(0);  
 
@@ -66,7 +67,7 @@ void setup() {
 
   for (Routine r : enabledRoutines) {
     r.setup(this);
-  }
+  }  
 }
 
 void setFadeLayer(int g) {
@@ -144,10 +145,10 @@ void draw() {
       newMode();
     }
   }
-
-  //  }
-
-  //  println(frameRate);
-  dacwes.sendData();
+  
+//  }
+  
+//  println(frameRate);
+  sculpture.sendData();  
 }
 
