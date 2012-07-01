@@ -9,24 +9,24 @@ import java.lang.reflect.Method;
 import hypermedia.net.*;
 import java.io.*;
 
-int WIDTH = 24;
+int WIDTH = 40;
 int HEIGHT = 160;
 boolean VERTICAL = false;
-int FRAMERATE = 100;
+int FRAMERATE = 40;
 String hostname = "127.0.0.1"; //"192.168.1.130";
 int TYPICAL_MODE_TIME = 300;
 Routine drop = new Seizure();
 Routine pong = new Pong();
 
 Routine[] enabledRoutines = new Routine[] {
- new Warp(new WarpSpeedMrSulu(), false, true, 0.5, 0.5),
-  new Warp(null, true, false, 0.5, 0.5),
-//  new Bursts(),  // broken
-  new Chase(),
-  new Fire(),
-  new NightSky(),
-  new RGBRoutine(),
-  new RainbowColors(),
+  new Warp(new WarpSpeedMrSulu(), false, true, 0.5, 0.5), 
+  new Warp(null, true, false, 0.5, 0.5), 
+  //  new Bursts(),  // broken
+  new Chase(), 
+  new Fire(), 
+  //  new NightSky(),
+  new RGBRoutine(), 
+  new RainbowColors(), 
   new Waves(),
 };
 
@@ -52,18 +52,18 @@ WiiController controller;
 
 void setup() {
   // Had to enable OPENGL for some reason new fonts don't work in JAVA2D.
-  size(WIDTH,HEIGHT);
+  size(WIDTH, HEIGHT);
 
   frameRate(FRAMERATE);
-  
+
   dacwes = new Dacwes(this, WIDTH, HEIGHT);
   dacwes.setAddress(hostname);
   dacwes.setAddressingMode(Dacwes.ADDRESSING_HORIZONTAL_NORMAL);  
 
   setMode(0);  
-    
+
   controller = new WiiController();
-  
+
   for (Routine r : enabledRoutines) {
     r.setup(this);
   }
@@ -84,7 +84,7 @@ void setMode(int newMode) {
   mode = newMode;
   modeFrameStart = frameCount;
   println("New mode " + currentRoutine.getClass().getName());
-  
+
   currentRoutine.reset();
 }
 
@@ -112,8 +112,11 @@ void draw() {
   if (controller.buttonA || (keyPressed && key == 'a')) {
     drop.draw();
   }
+  else if (controller.buttonB || (keyPressed && key == 'c')) {
+    newMode();
+  }
   else {
-  
+
     if (fadeOutFrames > 0) {
       fadeOutFrames--;
       blend(fadeLayer, 0, 0, WIDTH, HEIGHT, 0, 0, WIDTH, HEIGHT, MULTIPLY);
@@ -141,10 +144,10 @@ void draw() {
       newMode();
     }
   }
-  
-//  }
-  
-//  println(frameRate);
-  dacwes.sendData();  
+
+  //  }
+
+  //  println(frameRate);
+  dacwes.sendData();
 }
 
