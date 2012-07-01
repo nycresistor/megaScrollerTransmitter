@@ -21,7 +21,7 @@ Routine pong = new Pong();
 Routine[] enabledRoutines = new Routine[] {
   new Warp(new WarpSpeedMrSulu(), false, true, 0.5, 0.5), 
   new Warp(null, true, false, 0.5, 0.5), 
-  //  new Bursts(),  // broken
+  new Bursts(),
   new Chase(), 
   new Fire(), 
   //  new NightSky(),
