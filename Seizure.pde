@@ -6,7 +6,7 @@ class Seizure extends Routine {
       background(0,0,0);
     }
     else {
-      background(255,255,255);
+      background(130,130,130);
     }
     
     count = (count + 1) % 4;
