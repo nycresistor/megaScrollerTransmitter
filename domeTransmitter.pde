@@ -15,7 +15,7 @@ boolean VERTICAL = false;
 int FRAMERATE = 40;
 String hostname = "127.0.0.1"; //"192.168.1.130";
 int TYPICAL_MODE_TIME = 300;
-Routine drop = new Seizure();
+Routine drop = new DropTheBomb();
 Routine pong = new Pong();
 
 Routine[] enabledRoutines = new Routine[] {
@@ -68,6 +68,8 @@ void setup() {
   for (Routine r : enabledRoutines) {
     r.setup(this);
   }  
+  
+  drop.setup(this);
 }
 
 void setFadeLayer(int g) {
@@ -110,8 +112,10 @@ void draw() {
     pong.setup(this);
   }
 
-  if (controller.buttonA || (keyPressed && key == 'a')) {
-    drop.draw();
+  if (controller.buttonA || (keyPressed && key == 'a') && currentRoutine != drop) {
+    //drop.draw();
+    currentRoutine = drop;
+    drop.reset();
   }
   else if (controller.buttonB || (keyPressed && key == 'c')) {
     newMode();
@@ -135,7 +139,7 @@ void draw() {
     }
 
     if (fadeInFrames > 0) {
-      setFadeLayer(240 - fadeInFrames*8);
+      setFadeLayer(240 - fadeInFrames * (240 / FRAMERATE));
       blend(fadeLayer, 0, 0, WIDTH, HEIGHT, 0, 0, WIDTH, HEIGHT, MULTIPLY);
       fadeInFrames--;
     }
