@@ -9,17 +9,21 @@ import java.lang.reflect.Method;
 import hypermedia.net.*;
 import java.io.*;
 
+// This should be 127.0.0.1, 58802
 String transmit_address = "127.0.0.1";
 int transmit_port       = 58082;
 
+// Display configuration
 int WIDTH = 40;
 int HEIGHT = 160;
 boolean VERTICAL = false;
 int FRAMERATE = 40;
 int TYPICAL_MODE_TIME = 300;
 
+
 Routine drop = new DropTheBomb();
 Routine pong = new Pong();
+
 
 Routine[] enabledRoutines = new Routine[] {
 //  new Warp(new WarpSpeedMrSulu(), false, true, 0.5, 0.5), 

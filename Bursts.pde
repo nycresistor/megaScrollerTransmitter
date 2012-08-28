@@ -60,7 +60,7 @@ class Burst {
     yv = random(max_speed) - max_speed/2;
     
     maxd = random(12);
-    speed = random(5)/10 + 0.2;
+    speed = random(5)/10 + 0.4;
     d = 0;
     intensity = 255;
   }
@@ -74,9 +74,9 @@ class Burst {
   {
     fill(color(r,g,b));
     stroke(color(r,g,b));
-    ellipse(x, y, d*(1+3.0*y/HEIGHT), d*3);
-    ellipse(x-WIDTH, y, d*(1+3.0*y/HEIGHT), d*3);
-    ellipse(x+WIDTH, y, d*(1+3.0*y/HEIGHT), d*3);
+    ellipse(x, y,       d*(.5-.3*y/HEIGHT), d*3);
+    ellipse(x-WIDTH, y, d*(.5-.3*y/HEIGHT), d*3);
+    ellipse(x+WIDTH, y, d*(.5-.3*y/HEIGHT), d*3);
     d+= speed;
     if (d > maxd)
       r -= 15;
