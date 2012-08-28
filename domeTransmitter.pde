@@ -9,25 +9,28 @@ import java.lang.reflect.Method;
 import hypermedia.net.*;
 import java.io.*;
 
+String transmit_address = "127.0.0.1";
+int transmit_port       = 58082;
+
 int WIDTH = 40;
 int HEIGHT = 160;
 boolean VERTICAL = false;
 int FRAMERATE = 40;
-String hostname = "127.0.0.1"; //"192.168.1.130";
 int TYPICAL_MODE_TIME = 300;
+
 Routine drop = new DropTheBomb();
 Routine pong = new Pong();
 
 Routine[] enabledRoutines = new Routine[] {
-  new Warp(new WarpSpeedMrSulu(), false, true, 0.5, 0.5), 
-  new Warp(null, true, false, 0.5, 0.5), 
+//  new Warp(new WarpSpeedMrSulu(), false, true, 0.5, 0.5), 
+//  new Warp(null, true, false, 0.5, 0.5), 
   new Bursts(),
-  new Chase(), 
-  new Fire(), 
+//  new Chase(), 
+//  new Fire(), 
   //  new NightSky(),
-  new RGBRoutine(), 
-  new RainbowColors(), 
-  new Waves(),
+//  new RGBRoutine(), 
+//  new RainbowColors(), 
+//  new Waves(),
 };
 
 int w = 0;
@@ -37,6 +40,8 @@ int ZOOM = 1;
 
 long modeFrameStart;
 int mode = 0;
+
+float bright = .5;  // Global brightness modifier
 
 int direction = 1;
 int position = 0;
@@ -56,8 +61,7 @@ void setup() {
 
   frameRate(FRAMERATE);
   
-  sculpture = new Sculpture(this, WIDTH, HEIGHT, true);
-  sculpture.setAddress(hostname);
+  sculpture = new Sculpture(this, WIDTH, HEIGHT, true, transmit_address, transmit_port);
   sculpture.setAddressingMode(Sculpture.ADDRESSING_HORIZONTAL_NORMAL);  
   sculpture.setEnableGammaCorrection(true);
 
@@ -107,10 +111,10 @@ void newMode() {
 }
 
 void draw() {
-  if (((keyPressed && key == '1') || (controller.buttonOne && controller.buttonTwo)) && currentRoutine != pong) {
-    currentRoutine = pong;
-    pong.setup(this);
-  }
+//  if (((keyPressed && key == '1') || (controller.buttonOne && controller.buttonTwo)) && currentRoutine != pong) {
+//    currentRoutine = pong;
+//    pong.setup(this);
+//  }
 
   if (controller.buttonA || (keyPressed && key == 'a') && currentRoutine != drop) {
     //drop.draw();

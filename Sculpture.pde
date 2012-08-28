@@ -49,11 +49,11 @@ public class Sculpture {
   boolean enableGammaCorrection = false;
   boolean isRGB = false;
 
-  public Sculpture(PApplet parent, int w, int h, boolean isRGB) {
+  public Sculpture(PApplet parent, int w, int h, boolean isRGB, String address, int port) {
     this.parent = parent;
     this.udp = new UDP(parent);
-    this.address = "192.168.1.130";
-    this.port = 58082;
+    this.address = address;
+    this.port = port;
     this.w = w;
     this.h = h;
     this.isRGB = isRGB;
@@ -164,9 +164,9 @@ public class Sculpture {
           b = int(blue(image.pixels[y*w+x]));
           
           if (enableGammaCorrection) {
-            r = (int)(Math.pow(r/256.0,this.gammaValue)*256);
-            g = (int)(Math.pow(g/256.0,this.gammaValue)*256);
-            b = (int)(Math.pow(b/256.0,this.gammaValue)*256);
+            r = (int)(Math.pow(r/256.0,this.gammaValue)*256*bright);
+            g = (int)(Math.pow(g/256.0,this.gammaValue)*256*bright);
+            b = (int)(Math.pow(b/256.0,this.gammaValue)*256*bright);
           }
           
           buffer[(getAddress(x, y)*3)+1] = byte(r);
