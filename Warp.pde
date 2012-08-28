@@ -11,7 +11,7 @@ class Warp extends Routine {
     this.subroutine = null;
     warpHorizontal = false;
     warpVertical = true;
-    warpSpeed = 1;
+    warpSpeed = 2;
     warpFactor = 1;
   }
 
