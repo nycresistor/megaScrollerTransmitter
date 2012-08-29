@@ -4,7 +4,11 @@ class ColorDrop extends Routine {
   
     float frame_mult = 3;  // speed adjustment
   
+    // lets add some jitter
+    modeFrameStart = modeFrameStart - min(0,int(random(-5,12)));
+    
     long frame = frameCount - modeFrameStart;
+    
     
     for(int row = 0; row < height; row++) {
       float phase = sin((float)((row+frame*frame_mult)%height)/height*3.146);

@@ -17,24 +17,24 @@ int transmit_port       = 58082;
 int WIDTH = 40;
 int HEIGHT = 160;
 boolean VERTICAL = false;
-int FRAMERATE = 40;
+int FRAMERATE = 45;
 int TYPICAL_MODE_TIME = 300;
 
+float bright = 0.05;  // Global brightness modifier
 
-Routine drop = new DropTheBomb();
+Routine drop = new Seizure();
 Routine pong = new Pong();
 
-
 Routine[] enabledRoutines = new Routine[] {
-//  new Warp(new WarpSpeedMrSulu(), false, true, 0.5, 0.5), 
+  new Warp(new WarpSpeedMrSulu(), false, true, 0.5, 0.5), 
 //  new Warp(null, true, false, 0.5, 0.5), 
   new Bursts(),
 //  new Chase(), 
+  new ColorDrop(), 
 //  new Fire(), 
-  //  new NightSky(),
 //  new RGBRoutine(), 
-//  new RainbowColors(), 
-//  new Waves(),
+//  new RainbowColors(),
+  new Waves(),
 };
 
 int w = 0;
@@ -45,7 +45,6 @@ int ZOOM = 1;
 long modeFrameStart;
 int mode = 0;
 
-float bright = .5;  // Global brightness modifier
 
 int direction = 1;
 int position = 0;

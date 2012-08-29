@@ -50,17 +50,27 @@ class Wave {
   }
 
   public void init() {
-    r = 24;//random(TWO_PI);
+    r = 40;//random(TWO_PI);
     f = PI/32 + random(PI/32);
-    a = HEIGHT/3 + random(HEIGHT/3);
+    a = HEIGHT/4 + random(HEIGHT/4);
     y = HEIGHT/8 + int(random(HEIGHT - HEIGHT/8));
-    s = PI/128 + random(PI/64);
+    s = PI/128 + random(PI/16);
 
     if (random(10)<5) { 
       s = -s;
     }
     
-    c = color(random(255), random(255), random(255));
+    //c = color(random(255), random(255), random(255));
+    // naim hack (PORNJ Pink: RGB 252/23/218)
+    if(random(0,2) > 1) {
+      // pink
+      c = color(int(random(220,255)), int(random(0,55)), int(random(210,230)));
+    }
+    else {
+      // orange
+      c = color(int(random(230,255)), int(random(160,180)), int(random(0,1)));
+    }
+    //c = color(int(random(255)), int(random(255)), int(random(255)));
   }
 
   public void draw() {
@@ -74,12 +84,14 @@ class Wave {
 
     g.beginDraw();
     g.background(0);
-    g.stroke(c);
+    
+    float bright_mult = .5 + (1+sin(step))/4;
+    g.stroke(color(red(c)*bright_mult, green(c)*bright_mult, blue(c)*bright_mult));
 
     for (int x=0; x<WIDTH; x++) {
       h = sin(step) * a;
       step = step + f;          
-      g.line(x, y, x, y+h);
+      g.line(x, y+h*.1, x, y+h*random(1,1.2));
     }
 
     g.endDraw();

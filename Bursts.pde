@@ -37,6 +37,7 @@ class Burst {
   float maxd;
   float speed;
   int intensity;
+  
   float r;
   float g;
   float b;
@@ -48,14 +49,21 @@ class Burst {
 
   public void reset()
   {
-    r = random(128)+128;
-    g = random(128)+128;
-    b = random(128)+128;
-
+    //r = random(128)+128;
+    //g = random(128)+128;
+    //b = random(128)+128;
+    // naim hack (PORNJ Pink: RGB 252/23/218) 
+    r = random(220,255);
+    g = random(0,55);
+    b = random(210,230);
+    //r = random(128);
+    //g = random(118);
+    //b = random(128);
+   
     x = random(WIDTH);
     y = random(HEIGHT);
 
-    float max_speed = 3;
+    float max_speed = 2;
     xv = random(max_speed) - max_speed/2;
     yv = random(max_speed) - max_speed/2;
     
@@ -78,12 +86,19 @@ class Burst {
     ellipse(x-WIDTH, y, d*(.5-.3*y/HEIGHT), d*3);
     ellipse(x+WIDTH, y, d*(.5-.3*y/HEIGHT), d*3);
     d+= speed;
-    if (d > maxd)
-      r -= 15;
-      g -= 15;
-      b -= 15;
-      intensity -= 15;
-      
+    if (d > maxd) {
+      // day
+      r -= 2;
+      g -= 2;
+      b -= 2;
+      intensity -= 4;
+      //night
+//      r -= 1;
+//      g -= 1;
+//      b -= 1;
+//      intensity -= 3;
+    }
+    
     x +=xv;
     y +=yv;
 

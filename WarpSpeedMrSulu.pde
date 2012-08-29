@@ -32,6 +32,10 @@ class WarpStar {
   float y;
   float len;
   float v;
+  
+  float r;
+  float g;
+  float b;
 
   public WarpStar() {
     this.reset();
@@ -47,17 +51,26 @@ class WarpStar {
 
   public void draw() {
     y = y + v; 
-
-    int r = int(map(y, 0, HEIGHT, 0, 255));
-    int g = 0;
-    int b = 0;
+    //RGB 252/23/218 
+    //r = int(map(y, 0, HEIGHT, 0, 255));
+    //g = 0;
+    //b = 0;
+    //r = 252;
+    //g = 23;
+    //b = 218;
+    r = random(232,255);
+    g = random(03,43);
+    b = random(198,238);
 
     stroke(r, g, b);
     point(x, y);
 
     for (int i=0; i<len; i++) {
       float intensity = 255 >> i / 2;
-      stroke(intensity);
+      
+      fill(color(r,g,b));
+      stroke(color(r,g,b));
+      //stroke(intensity);
       point(x, y - i);
     }
 
