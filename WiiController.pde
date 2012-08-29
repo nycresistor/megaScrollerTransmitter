@@ -54,7 +54,7 @@ class WiiController {
 
   WiiController() {
     // by default darwiinremoteOSC sends OSC messages to port 5600
-    osc = new OscP5(this,5600);
+    osc = new OscP5(this,5601);
     
     // the address and the port of darwiinremoteOSC
     remoteAddress = "127.0.0.1";
@@ -127,9 +127,21 @@ class WiiController {
   }
   
   
-  void oscEvent(OscMessage theEvent) {
-//    println(theEvent.addrPattern()+"/ "+theEvent.typetag());
+  void oscEvent(OscMessage theOscMessage) {
+    if(theOscMessage.checkAddrPattern("/framerate")==true) {
+      if(theOscMessage.checkTypetag("i")) {
+//        println("Update framerate to " + theOscMessage.get(0).intValue());
+        frameRate(theOscMessage.get(0).intValue());
+      }
+    }
+    if(theOscMessage.checkAddrPattern("/brightness")==true) {
+      if(theOscMessage.checkTypetag("f")) {
+//        println("Update brigthness to " + theOscMessage.get(0).floatValue());
+        bright = theOscMessage.get(0).floatValue();
+      }
+    }
   }
+  
   
   void acceleration(float theX, float theY, float theZ) {
     acc.x = theX;
