@@ -20,7 +20,7 @@ boolean VERTICAL = false;
 int FRAMERATE = 45;
 int TYPICAL_MODE_TIME = 300;
 
-float bright = 0.05;  // Global brightness modifier
+float bright = 0.1;  // Global brightness modifier
 
 Routine drop = new Seizure();
 Routine pong = new Pong();

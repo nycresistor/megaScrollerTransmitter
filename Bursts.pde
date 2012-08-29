@@ -67,7 +67,7 @@ class Burst {
     xv = random(max_speed) - max_speed/2;
     yv = random(max_speed) - max_speed/2;
     
-    maxd = random(12);
+    maxd = random(6);
     speed = random(5)/10 + 0.4;
     d = 0;
     intensity = 255;
@@ -91,7 +91,7 @@ class Burst {
       r -= 2;
       g -= 2;
       b -= 2;
-      intensity -= 4;
+      intensity -= 15;
       //night
 //      r -= 1;
 //      g -= 1;
