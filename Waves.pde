@@ -50,10 +50,10 @@ class Wave {
   }
 
   public void init() {
-    r = 40;//random(TWO_PI);
-    f = PI/32 + random(PI/32);
-    a = HEIGHT/4 + random(HEIGHT/4);
-    y = HEIGHT/8 + int(random(HEIGHT - HEIGHT/8));
+    r = random(TWO_PI);
+    f = 2*PI/40;
+    a = HEIGHT/6 + random(HEIGHT/4);
+    y = HEIGHT/16 + int(random(HEIGHT - HEIGHT/16));
     s = PI/128 + random(PI/16);
 
     if (random(10)<5) { 
@@ -86,6 +86,7 @@ class Wave {
     g.background(0);
     
     float bright_mult = .5 + (1+sin(step))/4;
+    
     g.stroke(color(red(c)*bright_mult, green(c)*bright_mult, blue(c)*bright_mult));
 
     for (int x=0; x<WIDTH; x++) {

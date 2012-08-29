@@ -11,7 +11,7 @@ class ColorDrop extends Routine {
     
     
     for(int row = 0; row < height; row++) {
-      float phase = sin((float)((row+frame*frame_mult)%height)/height*3.146);
+      float phase = sin((float)((row+frame*frame_mult)%height)/height*3.146 + random(0,.6));
       
       float r = 0;
       float g = 0;
