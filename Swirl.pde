@@ -1,2 +1,0 @@
-class Swirl extends Routine {
-}
