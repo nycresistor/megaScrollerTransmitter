@@ -26,15 +26,18 @@ Routine drop = new Seizure();
 Routine pong = new Pong();
 
 Routine[] enabledRoutines = new Routine[] {
-//  new Bursts(),
-//  new Chase(), 
-//  new ColorDrop(), 
-//  new Fire(), 
+  new Bursts(),
+  new Chase(),
+  new ColorDrop(),
+  new DropTheBomb(),
+  new FFTDemo(),
+  new Fire(),
+  new Greetz(),
   new RGBRoutine(), 
-//  new RainbowColors(),
-//  new Waves(),
-//  new Warp(new WarpSpeedMrSulu(), false, true, 0.5, 0.5), 
-//  new Warp(null, true, false, 0.5, 0.5), 
+  new RainbowColors(),
+  new Warp(null, true, false, 0.5, 0.5),
+  new Warp(new WarpSpeedMrSulu(), false, true, 0.5, 0.5),
+  new Waves(),
 };
 
 int w = 0;
@@ -138,7 +141,6 @@ void draw() {
       }
     }
     else if (currentRoutine != null) {
-      currentRoutine.predraw();
       currentRoutine.draw();
     }
     else {
