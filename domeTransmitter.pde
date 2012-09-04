@@ -17,7 +17,7 @@ int transmit_port       = 58082;
 int WIDTH = 40;
 int HEIGHT = 160;
 boolean VERTICAL = false;
-int FRAMERATE = 45;
+int FRAMERATE = 15;
 int TYPICAL_MODE_TIME = 300;
 
 float bright = 0.1;  // Global brightness modifier
@@ -33,7 +33,7 @@ Routine[] enabledRoutines = new Routine[] {
   new ColorDrop(), 
 //  new Fire(), 
 //  new RGBRoutine(), 
-//  new RainbowColors(),
+  new RainbowColors(),
   new Waves(),
 };
 
@@ -109,7 +109,7 @@ void newMode() {
       newMode = int(random(enabledRoutines.length));
     }
   }
-
+   
   setMode(newMode);
 }
 

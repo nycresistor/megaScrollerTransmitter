@@ -60,17 +60,17 @@ class Wave {
       s = -s;
     }
     
-    //c = color(random(255), random(255), random(255));
+    c = color(random(255), random(255), random(255));
     // naim hack (PORNJ Pink: RGB 252/23/218)
-    if(random(0,2) > 1) {
-      // pink
-      c = color(int(random(220,255)), int(random(0,55)), int(random(210,230)));
-    }
-    else {
-      // orange
-      c = color(int(random(230,255)), int(random(160,180)), int(random(0,1)));
-    }
-    //c = color(int(random(255)), int(random(255)), int(random(255)));
+//    if(random(0,2) > 1) {
+//      // pink
+//      c = color(int(random(220,255)), int(random(0,55)), int(random(210,230)));
+//    }
+//    else {
+//      // orange
+//      c = color(int(random(230,255)), int(random(160,180)), int(random(0,1)));
+//    }
+//    //c = color(int(random(255)), int(random(255)), int(random(255)));
   }
 
   public void draw() {

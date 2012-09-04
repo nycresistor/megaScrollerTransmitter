@@ -53,9 +53,9 @@ class Burst {
     //g = random(128)+128;
     //b = random(128)+128;
     // naim hack (PORNJ Pink: RGB 252/23/218) 
-    r = random(220,255);
+    r = random(200,235);
     g = random(0,55);
-    b = random(210,230);
+    b = random(190,210);
     //r = random(128);
     //g = random(118);
     //b = random(128);
@@ -77,14 +77,26 @@ class Burst {
   {
     reset();
   }
-
+  
+  public void draw_ellipse(float x, float y, float widt, float heigh, color c) {
+    while(widt > 1 && heigh > 1) {
+      float target_brightness = random(.8,1.5);
+      c = color(red(c)*target_brightness, green(c)*target_brightness, blue(c)*target_brightness);
+      fill(c);
+      stroke(c);
+      ellipse(x, y, widt, heigh);
+      widt -= 1;
+      heigh -= 1;
+    }
+  }
+  
   public void draw()
-  {
-    fill(color(r,g,b));
-    stroke(color(r,g,b));
-    ellipse(x, y,       d*(.5-.3*y/HEIGHT), d*3);
-    ellipse(x-WIDTH, y, d*(.5-.3*y/HEIGHT), d*3);
-    ellipse(x+WIDTH, y, d*(.5-.3*y/HEIGHT), d*3);
+  {    
+    // Draw multiple elipses, to handle wrapping in the y direction.
+    draw_ellipse(x, y,       d*(.5-.3*y/HEIGHT), d*3, color(r,g,b));
+    draw_ellipse(x-WIDTH, y, d*(.5-.3*y/HEIGHT), d*3, color(r,g,b));
+    draw_ellipse(x+WIDTH, y, d*(.5-.3*y/HEIGHT), d*3, color(r,g,b));
+    
     d+= speed;
     if (d > maxd) {
       // day
@@ -99,11 +111,17 @@ class Burst {
 //      intensity -= 3;
     }
     
-    x +=xv;
-    y +=yv;
+    // add speed, try to scale slower at the bottom...
+    x +=xv*(HEIGHT - y/3)/HEIGHT;
+    y +=yv*(HEIGHT - y/3)/HEIGHT;
 
     if (intensity <= 0) {
       reset();
+    }
+   
+    long frame = frameCount - modeFrameStart;
+    if (frame > FRAMERATE*TYPICAL_MODE_TIME) {
+      newMode();
     }
   }
 }

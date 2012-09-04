@@ -31,7 +31,8 @@ class WarpStar {
   float x;
   float y;
   float len;
-  float v;
+  float vy;
+  float vx;
   
   float r;
   float g;
@@ -45,12 +46,21 @@ class WarpStar {
     x = int(random(0, WIDTH));
     y = int(random(0, -100));
 
-    v = random(0, 1);
-    len = v * 5;
+//    if (random(0,1) > .5) {
+//      vx = random(0, 1);
+//      vy = 0;
+//      len = vx * 5;
+//    }
+//    else {
+      vx = 0;
+      vy = random(0, 1);
+      len = vy * 5;
+//    }
   }
 
   public void draw() {
-    y = y + v; 
+    x = x + vx;
+    y = y + vy;
     //RGB 252/23/218 
     //r = int(map(y, 0, HEIGHT, 0, 255));
     //g = 0;
@@ -61,6 +71,11 @@ class WarpStar {
     r = random(232,255);
     g = random(03,43);
     b = random(198,238);
+    // scale brightness.
+    float bright = random(.5,2);
+    r = r*bright;
+    g = g*bright;
+    b = b*bright;
 
     stroke(r, g, b);
     point(x, y);
@@ -68,13 +83,14 @@ class WarpStar {
     for (int i=0; i<len; i++) {
       float intensity = 255 >> i / 2;
       
-      fill(color(r,g,b));
+      fill(color(r*random(.8,1.3),g*random(.8,1.3),b*random(.8,1.3)));
       stroke(color(r,g,b));
       //stroke(intensity);
       point(x, y - i);
     }
 
     if (y > HEIGHT) this.reset();
+    if (x > WIDTH) this.reset();
   }
 }
 
