@@ -26,15 +26,15 @@ Routine drop = new Seizure();
 Routine pong = new Pong();
 
 Routine[] enabledRoutines = new Routine[] {
-  new Warp(new WarpSpeedMrSulu(), false, true, 0.5, 0.5), 
-//  new Warp(null, true, false, 0.5, 0.5), 
-  new Bursts(),
+//  new Bursts(),
 //  new Chase(), 
-  new ColorDrop(), 
+//  new ColorDrop(), 
 //  new Fire(), 
-//  new RGBRoutine(), 
-  new RainbowColors(),
-  new Waves(),
+  new RGBRoutine(), 
+//  new RainbowColors(),
+//  new Waves(),
+//  new Warp(new WarpSpeedMrSulu(), false, true, 0.5, 0.5), 
+//  new Warp(null, true, false, 0.5, 0.5), 
 };
 
 int w = 0;
@@ -50,7 +50,7 @@ int direction = 1;
 int position = 0;
 Routine currentRoutine = null;
 
-Sculpture sculpture;
+LEDDisplay sign;
 
 PGraphics fadeLayer;
 int fadeOutFrames = 0;
@@ -64,9 +64,9 @@ void setup() {
 
   frameRate(FRAMERATE);
   
-  sculpture = new Sculpture(this, WIDTH, HEIGHT, true, transmit_address, transmit_port);
-  sculpture.setAddressingMode(Sculpture.ADDRESSING_HORIZONTAL_NORMAL);  
-  sculpture.setEnableGammaCorrection(true);
+  sign = new LEDDisplay(this, WIDTH, HEIGHT, true, transmit_address, transmit_port);
+  sign.setAddressingMode(LEDDisplay.ADDRESSING_HORIZONTAL_NORMAL);  
+  sign.setEnableGammaCorrection(true);
 
   setMode(0);  
 
@@ -160,6 +160,6 @@ void draw() {
 //  }
   
 //  println(frameRate);
-  sculpture.sendData();  
+  sign.sendData();  
 }
 

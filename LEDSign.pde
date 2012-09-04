@@ -1,7 +1,7 @@
 import hypermedia.net.*;
 
 /**
- * This class can be added to your sketches to make them compatible with the sign.
+ * This class can be added to your sketches to make them compatible with an LED display.
  * Use Sketch..Add File and choose this file to copy it into your sketch.
  * 
  * void setup() {
@@ -28,7 +28,7 @@ import hypermedia.net.*;
  *
  **/
 
-public class Sculpture {
+public class LEDDisplay {
   public static final int ADDRESSING_VERTICAL_NORMAL = 1;
   public static final int ADDRESSING_VERTICAL_HALF = 2;
   public static final int ADDRESSING_VERTICAL_FLIPFLOP = 3;
@@ -49,7 +49,7 @@ public class Sculpture {
   boolean enableGammaCorrection = false;
   boolean isRGB = false;
 
-  public Sculpture(PApplet parent, int w, int h, boolean isRGB, String address, int port) {
+  public LEDDisplay(PApplet parent, int w, int h, boolean isRGB, String address, int port) {
     this.parent = parent;
     this.udp = new UDP(parent);
     this.address = address;
@@ -140,7 +140,6 @@ public class Sculpture {
     udp.send(modeBuffer, address, port);
   }
 
-  int maxSentByte = 0;
   public void sendData() {
     PImage image = get();
 
