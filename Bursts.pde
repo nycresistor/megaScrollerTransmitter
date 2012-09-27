@@ -60,8 +60,8 @@ class Burst {
     //g = random(118);
     //b = random(128);
    
-    x = random(WIDTH);
-    y = random(HEIGHT);
+    x = random(displayWidth);
+    y = random(displayHeight);
 
     float max_speed = 2;
     xv = random(max_speed) - max_speed/2;
@@ -93,9 +93,9 @@ class Burst {
   public void draw()
   {    
     // Draw multiple elipses, to handle wrapping in the y direction.
-    draw_ellipse(x, y,       d*(.5-.3*y/HEIGHT), d*3, color(r,g,b));
-    draw_ellipse(x-WIDTH, y, d*(.5-.3*y/HEIGHT), d*3, color(r,g,b));
-    draw_ellipse(x+WIDTH, y, d*(.5-.3*y/HEIGHT), d*3, color(r,g,b));
+    draw_ellipse(x, y,       d*(.5-.3*y/displayHeight), d*3, color(r,g,b));
+    draw_ellipse(x-displayWidth, y, d*(.5-.3*y/displayHeight), d*3, color(r,g,b));
+    draw_ellipse(x+displayWidth, y, d*(.5-.3*y/displayHeight), d*3, color(r,g,b));
     
     d+= speed;
     if (d > maxd) {
@@ -112,8 +112,8 @@ class Burst {
     }
     
     // add speed, try to scale slower at the bottom...
-    x +=xv*(HEIGHT - y/3)/HEIGHT;
-    y +=yv*(HEIGHT - y/3)/HEIGHT;
+    x +=xv*(displayHeight - y/3)/displayHeight;
+    y +=yv*(displayHeight - y/3)/displayHeight;
 
     if (intensity <= 0) {
       reset();

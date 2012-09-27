@@ -46,14 +46,14 @@ class Wave {
   public Wave() {
     init();
 
-    g = createGraphics(WIDTH, HEIGHT, P2D);
+    g = createGraphics(displayWidth, displayHeight, P2D);
   }
 
   public void init() {
     r = random(TWO_PI);
     f = 2*PI/40;
-    a = HEIGHT/6 + random(HEIGHT/4);
-    y = HEIGHT/16 + int(random(HEIGHT - HEIGHT/16));
+    a = displayHeight/6 + random(displayHeight/4);
+    y = displayHeight/16 + int(random(displayHeight - displayHeight/16));
     s = PI/128 + random(PI/16);
 
     if (random(10)<5) { 
@@ -89,7 +89,7 @@ class Wave {
     
     g.stroke(color(red(c)*bright_mult, green(c)*bright_mult, blue(c)*bright_mult));
 
-    for (int x=0; x<WIDTH; x++) {
+    for (int x=0; x<displayWidth; x++) {
       h = sin(step) * a;
       step = step + f;          
       g.line(x, y+h*.1, x, y+h*random(1,1.2));
@@ -97,6 +97,6 @@ class Wave {
 
     g.endDraw();
 
-    blend(g, 0, 0, WIDTH, HEIGHT, 0, 0, WIDTH, HEIGHT, SCREEN);
+    blend(g, 0, 0, displayWidth, displayHeight, 0, 0, displayWidth, displayHeight, SCREEN);
   }
 }    

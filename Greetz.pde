@@ -22,20 +22,20 @@ class Greetz extends Routine {
     fill(255);
   
     if (w == 0) {
-      w = -int((message.length()-1) * (FONT_SIZE*1.35) + WIDTH);
+      w = -int((message.length()-1) * (FONT_SIZE*1.35) + displayWidth);
     }
     
     fill(255,128,64);
     text(message, x, FONT_SIZE);
   
-    if (height/2 > FONT_SIZE) {
+    if (displayHeight/2 > FONT_SIZE) {
       
-      image(get(0,0,width,FONT_SIZE),0,20,width,height/2);
+      image(get(0,0,displayWidth,FONT_SIZE),0,20,displayWidth,displayHeight/2);
       fill(0);
-      rect(0,0,width,FONT_SIZE);
-      //copy(0,0,width,FONT_SIZE,0,FONT_SIZE,width,FONT_SIZE/2);
-      //imgCopy = copy(0,0,width,FONT_SIZE);
-      //image(imgCopy,0,0,width,height);
+      rect(0,0,displayWidth,FONT_SIZE);
+      //copy(0,0,displayWidth,FONT_SIZE,0,FONT_SIZE,displayWidth,FONT_SIZE/2);
+      //imgCopy = copy(0,0,displayWidth,FONT_SIZE);
+      //image(imgCopy,0,0,displayWidth,displayHeight);
     }
     
     if (frameCount % 2 == 0) {
@@ -43,7 +43,7 @@ class Greetz extends Routine {
     }
   
     if (x<w) {
-      x = HEIGHT;  
+      x = displayHeight;  
       message = messages[int(random(messages.length))];
       w = 0;
       newMode();

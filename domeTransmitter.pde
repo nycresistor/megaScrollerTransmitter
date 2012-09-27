@@ -1,9 +1,3 @@
-import ddf.minim.*;
-import ddf.minim.signals.*;
-import ddf.minim.analysis.*;
-import ddf.minim.effects.*;
-
-//import codeanticode.gsvideo.*;
 import processing.opengl.*;
 import java.lang.reflect.Method;
 import hypermedia.net.*;
@@ -13,9 +7,11 @@ import java.io.*;
 String transmit_address = "127.0.0.1";
 int transmit_port       = 58082;
 
+
 // Display configuration
-int WIDTH = 40;
-int HEIGHT = 160;
+int displayWidth = 40;
+int displayHeight = 160;
+
 boolean VERTICAL = false;
 int FRAMERATE = 15;
 int TYPICAL_MODE_TIME = 300;
@@ -41,7 +37,7 @@ Routine[] enabledRoutines = new Routine[] {
 };
 
 int w = 0;
-int x = WIDTH;
+int x = displayWidth;
 PFont font;
 int ZOOM = 1;
 
@@ -62,12 +58,11 @@ int fadeInFrames = 0;
 WiiController controller;
 
 void setup() {
-  // Had to enable OPENGL for some reason new fonts don't work in JAVA2D.
-  size(WIDTH, HEIGHT);
+  size(displayWidth*2, displayHeight*2);
 
   frameRate(FRAMERATE);
   
-  sign = new LEDDisplay(this, WIDTH, HEIGHT, true, transmit_address, transmit_port);
+  sign = new LEDDisplay(this, displayWidth, displayHeight, true, transmit_address, transmit_port);
   sign.setAddressingMode(LEDDisplay.ADDRESSING_HORIZONTAL_NORMAL);  
   sign.setEnableGammaCorrection(true);
 
@@ -83,11 +78,11 @@ void setup() {
 }
 
 void setFadeLayer(int g) {
-  fadeLayer = createGraphics(WIDTH, HEIGHT, P2D);
+  fadeLayer = createGraphics(displayWidth, displayHeight, P2D);
   fadeLayer.beginDraw();
   fadeLayer.stroke(g);
   fadeLayer.fill(g);
-  fadeLayer.rect(0, 0, WIDTH, HEIGHT);
+  fadeLayer.rect(0, 0, displayWidth, displayHeight);
   fadeLayer.endDraw();
 }
 
@@ -131,10 +126,9 @@ void draw() {
     newMode();
   }
   else {
-
     if (fadeOutFrames > 0) {
       fadeOutFrames--;
-      blend(fadeLayer, 0, 0, WIDTH, HEIGHT, 0, 0, WIDTH, HEIGHT, MULTIPLY);
+      blend(fadeLayer, 0, 0, displayWidth, displayHeight, 0, 0, displayWidth, displayHeight, MULTIPLY);
 
       if (fadeOutFrames == 0) {
         fadeInFrames = FRAMERATE;
@@ -149,7 +143,7 @@ void draw() {
 
     if (fadeInFrames > 0) {
       setFadeLayer(240 - fadeInFrames * (240 / FRAMERATE));
-      blend(fadeLayer, 0, 0, WIDTH, HEIGHT, 0, 0, WIDTH, HEIGHT, MULTIPLY);
+      blend(fadeLayer, 0, 0, displayWidth, displayHeight, 0, 0, displayWidth, displayHeight, MULTIPLY);
       fadeInFrames--;
     }
 
@@ -159,9 +153,6 @@ void draw() {
     }
   }
   
-//  }
-  
-//  println(frameRate);
   sign.sendData();  
 }
 

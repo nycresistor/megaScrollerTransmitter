@@ -43,7 +43,7 @@ class WarpStar {
   }
 
   public void reset() {
-    x = int(random(0, WIDTH));
+    x = int(random(0, displayWidth));
     y = int(random(0, -100));
 
 //    if (random(0,1) > .5) {
@@ -62,7 +62,7 @@ class WarpStar {
     x = x + vx;
     y = y + vy;
     //RGB 252/23/218 
-    //r = int(map(y, 0, HEIGHT, 0, 255));
+    //r = int(map(y, 0, displayHeight, 0, 255));
     //g = 0;
     //b = 0;
     //r = 252;
@@ -89,8 +89,8 @@ class WarpStar {
       point(x, y - i);
     }
 
-    if (y > HEIGHT) this.reset();
-    if (x > WIDTH) this.reset();
+    if (y > displayHeight) this.reset();
+    if (x > displayWidth) this.reset();
   }
 }
 

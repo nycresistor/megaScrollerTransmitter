@@ -19,9 +19,9 @@ class Pong extends Routine {
     ballSpeed = 0.125;
     lives = 3;
 
-    paddleX = width/2;
+    paddleX = displayWidth/2;
     paddleY = 0;
-    paddleSize = height/8;
+    paddleSize = displayHeight/8;
     ballFlashUntilFrame = frameCount + (long)frameRate * 3;
   }
 
@@ -75,8 +75,8 @@ class Pong extends Routine {
       paddleY++;
     }
 
-    if (paddleY > height-paddleSize) {
-      paddleY = height-paddleSize;
+    if (paddleY > displayHeight-paddleSize) {
+      paddleY = displayHeight-paddleSize;
     }
     else if (paddleY < 0) {
       paddleY = 0;
@@ -94,8 +94,8 @@ class Pong extends Routine {
     ballX += xVec;
     ballY += yVec; 
 
-    if (ballY >= height) {
-      ballY = height-1;
+    if (ballY >= displayHeight) {
+      ballY = displayHeight-1;
       bounceY();
     }
     else if (ballY < 0) {
@@ -103,8 +103,8 @@ class Pong extends Routine {
       bounceY();
     }
 
-    if (ballX >= width) {
-      ballX = ballX - width;
+    if (ballX >= displayWidth) {
+      ballX = ballX - displayWidth;
 
       if (!deathLeft) {
         playerDied();
@@ -114,7 +114,7 @@ class Pong extends Routine {
       }
     }
     else if (ballX < 0) {
-      ballX = width + ballX;
+      ballX = displayWidth + ballX;
 
       if (deathLeft) {
         playerDied();

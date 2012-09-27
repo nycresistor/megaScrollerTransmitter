@@ -14,17 +14,17 @@ class Fire extends Routine {
     //  size(640, 360, P2D);
 
     // Create buffered image for 3d cube
-    pg = createGraphics(width, height, P3D);
+    pg = createGraphics(displayWidth, displayHeight, P3D);
 
-    calc1 = new int[width];
-    calc3 = new int[width];
-    calc4 = new int[width];
-    calc2 = new int[height];
-    calc5 = new int[height];
+    calc1 = new int[displayWidth];
+    calc3 = new int[displayWidth];
+    calc4 = new int[displayWidth];
+    calc2 = new int[displayHeight];
+    calc5 = new int[displayHeight];
 
     colorMode(HSB);
 
-    fire = new int[width][height];
+    fire = new int[displayWidth][displayHeight];
     palette = new color[255];
 
     // Generate the palette
@@ -37,15 +37,15 @@ class Fire extends Routine {
 
     // Precalculate which pixel values to add during animation loop
     // this speeds up the effect by 10fps
-    for (int x = 0; x < width; x++) {
-      calc1[x] = x % width;
-      calc3[x] = (x - 1 + width) % width;
-      calc4[x] = (x + 1) % width;
+    for (int x = 0; x < displayWidth; x++) {
+      calc1[x] = x % displayWidth;
+      calc3[x] = (x - 1 + displayWidth) % displayWidth;
+      calc4[x] = (x + 1) % displayWidth;
     }
 
-    for (int y = 0; y < height; y++) {
-      calc2[y] = (y + 1) % height;
-      calc5[y] = (y + 2) % height;
+    for (int y = 0; y < displayHeight; y++) {
+      calc2[y] = (y + 1) % displayHeight;
+      calc5[y] = (y + 2) % displayHeight;
     }
   }
 
@@ -54,7 +54,7 @@ class Fire extends Routine {
 
 //    // Rotating wireframe cube
 //    pg.beginDraw();
-//    pg.translate(width >> 1, height >> 1);
+//    pg.translate(displayWidth >> 1, displayHeight >> 1);
 //    pg.rotateX(sin(angle/2));
 //    pg.rotateY(cos(angle/2));
 //    pg.background(0);
@@ -65,17 +65,17 @@ class Fire extends Routine {
 //    pg.endDraw();
 
     // Randomize the bottom row of the fire buffer
-    for (int x = 0; x < width; x++)
+    for (int x = 0; x < displayWidth; x++)
     {
-      fire[x][height-1] = int(random(0, 190)) ;
+      fire[x][displayHeight-1] = int(random(0, 190)) ;
     }
 
     loadPixels();
 
     int counter = 0;
     // Do the fire calculations for every pixel, from top to bottom
-    for (int y = 0; y < height; y++) {
-      for (int x = 0; x < width; x++) {
+    for (int y = 0; y < displayHeight; y++) {
+      for (int x = 0; x < displayWidth; x++) {
         // Add pixel values around current pixel
 
         fire[x][y] =
