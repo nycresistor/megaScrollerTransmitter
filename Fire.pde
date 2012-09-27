@@ -47,6 +47,8 @@ class Fire extends Routine {
       calc2[y] = (y + 1) % displayHeight;
       calc5[y] = (y + 2) % displayHeight;
     }
+    
+    colorMode(RGB);
   }
 
   void draw() {

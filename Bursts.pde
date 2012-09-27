@@ -49,13 +49,9 @@ class Burst {
 
   public void reset()
   {
-    //r = random(128)+128;
-    //g = random(128)+128;
-    //b = random(128)+128;
-    // naim hack (PORNJ Pink: RGB 252/23/218) 
-    r = random(200,235);
-    g = random(0,55);
-    b = random(190,210);
+    r = random(128)+128;
+    g = random(128)+128;
+    b = random(128)+128;
     //r = random(128);
     //g = random(118);
     //b = random(128);

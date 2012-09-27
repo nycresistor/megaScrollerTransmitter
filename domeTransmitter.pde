@@ -13,7 +13,7 @@ int displayWidth = 40;
 int displayHeight = 160;
 
 boolean VERTICAL = false;
-int FRAMERATE = 15;
+int FRAMERATE = 30;
 int TYPICAL_MODE_TIME = 300;
 
 float bright = 0.1;  // Global brightness modifier
