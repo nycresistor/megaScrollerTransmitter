@@ -5,7 +5,7 @@ import java.io.*;
 
 // This should be 127.0.0.1, 58802
 String transmit_address = "127.0.0.1";
-int transmit_port       = 58082;
+int transmit_port       = 58083;
 
 
 // Display configuration
@@ -13,22 +13,24 @@ int displayWidth = 40;
 int displayHeight = 160;
 
 boolean VERTICAL = false;
-int FRAMERATE = 30;
+int FRAMERATE = 25;
 int TYPICAL_MODE_TIME = 300;
 
-float bright = 0.1;  // Global brightness modifier
+float bright = 1;  // Global brightness modifier
 
 Routine drop = new Seizure();
 Routine pong = new Pong();
+Routine backupRoutine = null;
 
 Routine[] enabledRoutines = new Routine[] {
+  new Animator("anim-runner2",3,.5,0,0,20),
   new Bursts(),
-  new Chase(),
+//  new Chase(),
   new ColorDrop(),
-  new DropTheBomb(),
+//  new DropTheBomb(),
   new FFTDemo(),
-  new Fire(),
-  new Greetz(),
+//  new Fire(),
+//  new Greetz(),
   new RGBRoutine(), 
   new RainbowColors(),
   new Warp(null, true, false, 0.5, 0.5),
@@ -58,7 +60,7 @@ int fadeInFrames = 0;
 WiiController controller;
 
 void setup() {
-  size(displayWidth*2, displayHeight*2);
+  size(displayWidth, displayHeight);
 
   frameRate(FRAMERATE);
   
@@ -117,10 +119,16 @@ void draw() {
 //    pong.setup(this);
 //  }
 
-  if (controller.buttonA || (keyPressed && key == 'a') && currentRoutine != drop) {
+  // Jump into seizure mode
+  if ((controller.buttonA || (keyPressed && key == 'a')) && currentRoutine != drop) {
     //drop.draw();
+    backupRoutine = currentRoutine;
     currentRoutine = drop;
     drop.reset();
+  }
+  // Drop out of seizure mode
+  else if (!controller.buttonA && currentRoutine == drop) {
+    currentRoutine = backupRoutine;
   }
   else if (controller.buttonB || (keyPressed && key == 'c')) {
     newMode();
