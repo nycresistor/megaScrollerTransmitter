@@ -5,7 +5,7 @@ import java.io.*;
 
 // This should be 127.0.0.1, 58802
 String transmit_address = "127.0.0.1";
-int transmit_port       = 58083;
+int transmit_port       = 58082;
 
 
 // Display configuration
@@ -16,25 +16,25 @@ boolean VERTICAL = false;
 int FRAMERATE = 25;
 int TYPICAL_MODE_TIME = 300;
 
-float bright = 1;  // Global brightness modifier
+float bright = .1;  // Global brightness modifier
 
 Routine drop = new Seizure();
 Routine pong = new Pong();
 Routine backupRoutine = null;
 
 Routine[] enabledRoutines = new Routine[] {
-  new Animator("anim-runner2",3,.5,0,0,20),
-  new Bursts(),
-//  new Chase(),
-  new ColorDrop(),
-//  new DropTheBomb(),
-  new FFTDemo(),
-//  new Fire(),
-//  new Greetz(),
+  //  new Animator("anim-nyancat",10,.2,0,0,-10),
+  new Bursts(), 
+  //  new Chase(),
+  new ColorDrop(), 
+  //  new DropTheBomb(),
+  new FFTDemo(), 
+  //  new Fire(),
+  //  new Greetz(),
   new RGBRoutine(), 
-  new RainbowColors(),
-  new Warp(null, true, false, 0.5, 0.5),
-  new Warp(new WarpSpeedMrSulu(), false, true, 0.5, 0.5),
+  new RainbowColors(), 
+  new Warp(null, true, false, 0.5, 0.5), 
+  new Warp(new WarpSpeedMrSulu(), false, true, 0.5, 0.5), 
   new Waves(),
 };
 
@@ -63,7 +63,7 @@ void setup() {
   size(displayWidth, displayHeight);
 
   frameRate(FRAMERATE);
-  
+
   sign = new LEDDisplay(this, displayWidth, displayHeight, true, transmit_address, transmit_port);
   sign.setAddressingMode(LEDDisplay.ADDRESSING_HORIZONTAL_NORMAL);  
   sign.setEnableGammaCorrection(true);
@@ -75,7 +75,7 @@ void setup() {
   for (Routine r : enabledRoutines) {
     r.setup(this);
   }  
-  
+
   drop.setup(this);
 }
 
@@ -109,18 +109,28 @@ void newMode() {
       newMode = int(random(enabledRoutines.length));
     }
   }
-   
+
   setMode(newMode);
 }
 
+boolean switching_mode = false; // if true, we already switched modes, so don't do it again this frame (don't freeze the display if someone holds the b button)
+int seizure_count = 0;  // Only let seizure mode work for a short time.
+
 void draw() {
-//  if (((keyPressed && key == '1') || (controller.buttonOne && controller.buttonTwo)) && currentRoutine != pong) {
-//    currentRoutine = pong;
-//    pong.setup(this);
-//  }
+  if (!controller.buttonB) {
+    switching_mode = false;
+  }
+
+  if (controller.buttonA) {
+    seizure_count += 1;
+  }
+  else {
+    seizure_count = 0;
+  }
+
 
   // Jump into seizure mode
-  if ((controller.buttonA || (keyPressed && key == 'a')) && currentRoutine != drop) {
+  if ((controller.buttonA || (keyPressed && key == 'a')) && currentRoutine != drop && seizure_count == 1) {
     //drop.draw();
     backupRoutine = currentRoutine;
     currentRoutine = drop;
@@ -130,8 +140,12 @@ void draw() {
   else if (!controller.buttonA && currentRoutine == drop) {
     currentRoutine = backupRoutine;
   }
-  else if (controller.buttonB || (keyPressed && key == 'c')) {
+  else if (seizure_count > 10 && currentRoutine == drop) {
+    currentRoutine = backupRoutine;
+  }
+  else if ((controller.buttonB || (keyPressed && key == 'c')) && !switching_mode) {
     newMode();
+    switching_mode = true;
   }
   else {
     if (fadeOutFrames > 0) {
@@ -160,7 +174,7 @@ void draw() {
       newMode();
     }
   }
-  
-  sign.sendData();  
+
+  sign.sendData();
 }
 
