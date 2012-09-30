@@ -16,14 +16,14 @@ boolean VERTICAL = false;
 int FRAMERATE = 25;
 int TYPICAL_MODE_TIME = 300;
 
-float bright = .1;  // Global brightness modifier
+float bright = 1;  // Global brightness modifier
 
 Routine drop = new Seizure();
 Routine pong = new Pong();
 Routine backupRoutine = null;
 
 Routine[] enabledRoutines = new Routine[] {
-  //  new Animator("anim-nyancat",10,.2,0,0,-10),
+  new Animator("anim-nyancat",1,.5,0,0,0),
   new Bursts(), 
   //  new Chase(),
   new ColorDrop(), 
