@@ -54,7 +54,7 @@ class WiiController {
 
   WiiController() {
     // by default darwiinremoteOSC sends OSC messages to port 5600
-    osc = new OscP5(this,5601);
+    osc = new OscP5(this,5600);
     
     // the address and the port of darwiinremoteOSC
     remoteAddress = "127.0.0.1";
@@ -250,18 +250,35 @@ class WiiController {
 
   void buttonUp(int theValue) {
     buttonUp = (theValue==1)  ? true:false;
+    
+    if(buttonUp) {
+      bright = min(1,bright + .1);
+    }
   }
 
   void buttonDown(int theValue) {
     buttonDown = (theValue==1) ? true:false;
+
+    if(buttonDown) {
+      bright = max(.1,bright - .1);
+    }
   }
   
   void buttonLeft(int theValue) {
     buttonLeft = (theValue==1)  ? true:false;
+    
+    if (buttonLeft) {
+      frameRate(max(15,frameRate - 5));
+    }
   }
 
   void buttonRight(int theValue) {
     buttonRight = (theValue==1) ? true:false;
+    
+    // make faster
+    if (buttonRight) {
+      frameRate(min(150,frameRate + 5));
+    }
   }
 
   void buttonHome(int theValue) {
