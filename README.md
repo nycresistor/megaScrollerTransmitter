@@ -3,11 +3,12 @@ Transmits data to our blinky dome
 Requires the following libraries:
 
 * [Hypermedia.net UDP](http://ubaa.net/shared/processing/udp/)
+* [oscp5](http://www.sojamo.de/libraries/oscP5/)
+* [MIDI bus](http://smallbutdigital.com/themidibus.php)
 
+For Wii remote support, you need darwiinosc (OS X only, sorry!)
 
-You need oscp5 and darwiinosc for the Wii controller support.  It's OSX only, sorry.
+* [darwiinosc](http://code.google.com/p/darwiinosc/)
 
-http://code.google.com/p/darwiinosc/
-http://www.sojamo.de/libraries/oscP5/
 
 
