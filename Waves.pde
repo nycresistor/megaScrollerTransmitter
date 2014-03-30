@@ -46,7 +46,7 @@ class Wave {
   public Wave() {
     init();
 
-    g = createGraphics(displayWidth, displayHeight, P2D);
+    g = createGraphics(displayWidth, displayHeight);
   }
 
   public void init() {

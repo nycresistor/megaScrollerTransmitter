@@ -4,16 +4,16 @@ import hypermedia.net.*;
 import java.io.*;
 
 // This should be 127.0.0.1, 58802
-String transmit_address = "127.0.0.1";
-int transmit_port       = 58082;
+String transmit_address = "192.168.8.2";
+int transmit_port       = 9999;
 
 
 // Display configuration
-int displayWidth = 40;
-int displayHeight = 160;
+int displayWidth = 48;
+int displayHeight = 256;
 
 boolean VERTICAL = false;
-int FRAMERATE = 25;
+int FRAMERATE = 30;
 int TYPICAL_MODE_TIME = 300;
 
 float bright = 1;  // Global brightness modifier
@@ -23,17 +23,18 @@ Routine pong = new Pong();
 Routine backupRoutine = null;
 
 Routine[] enabledRoutines = new Routine[] {
-  new Animator("anim-nyancat",1,.5,0,0,0),
+  ////new Animator("anim-nyancat",1,.5,0,0,0),
+  ////new Flat(),
   new Bursts(), 
-  //  new Chase(),
+  ////  new Chase(),
   new ColorDrop(), 
-  //  new DropTheBomb(),
-  new FFTDemo(), 
-  //  new Fire(),
-  //  new Greetz(),
+  ////new DropTheBomb(),
+  ////new FFTDemo(), 
+  ////  new Fire(),
+  ////  new Greetz(),
   new RGBRoutine(), 
-  new RainbowColors(), 
-  new Warp(null, true, false, 0.5, 0.5), 
+  ////new RainbowColors(), 
+  //new Warp(null, true, false, 0.5, 0.5), 
   new Warp(new WarpSpeedMrSulu(), false, true, 0.5, 0.5), 
   new Waves(),
 };
@@ -80,7 +81,7 @@ void setup() {
 }
 
 void setFadeLayer(int g) {
-  fadeLayer = createGraphics(displayWidth, displayHeight, P2D);
+  fadeLayer = createGraphics(displayWidth, displayHeight);
   fadeLayer.beginDraw();
   fadeLayer.stroke(g);
   fadeLayer.fill(g);

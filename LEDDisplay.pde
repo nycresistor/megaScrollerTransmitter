@@ -57,7 +57,8 @@ public class LEDDisplay {
     this.w = w;
     this.h = h;
     this.isRGB = isRGB;
-    int bufferSize = (isRGB ? 3 : 1)*(w*h)+1;
+//    int bufferSize = (isRGB ? 3 : 1)*(w*h)+1;
+    int bufferSize = (isRGB ? 3 : 1)*(w*h);
     buffer = new byte[bufferSize];
     this.addressingMode = ADDRESSING_VERTICAL_NORMAL;
     // TODO Detect this based on VERTICAL (h/2) vs. HORIZONTAL (w/2)
@@ -167,10 +168,14 @@ public class LEDDisplay {
             g = (int)(Math.pow(g/256.0,this.gammaValue)*256*bright);
             b = (int)(Math.pow(b/256.0,this.gammaValue)*256*bright);
           }
+
+//          buffer[(getAddress(x, y)*3)+3] = byte(r);
+//          buffer[(getAddress(x, y)*3)+1] = byte(g);
+//          buffer[(getAddress(x, y)*3)+2] = byte(b);
           
-          buffer[(getAddress(x, y)*3)+1] = byte(r);
-          buffer[(getAddress(x, y)*3)+2] = byte(g);
-          buffer[(getAddress(x, y)*3)+3] = byte(b);
+          buffer[(getAddress(x, y)*3)+0] = byte(r);
+          buffer[(getAddress(x, y)*3)+1] = byte(g);
+          buffer[(getAddress(x, y)*3)+2] = byte(b);
         }
         else {
           r = int(brightness(image.pixels[y*w+x]));

@@ -59,7 +59,7 @@ class Animation {
   PGraphics canvas;
   
   Animation(String _name, int _frameDivider) {
-    canvas = createGraphics(width,height,P2D);
+    canvas = createGraphics(width,height);
     frameNumber = 0;
     frameDivider = _frameDivider;
     load(_name);
