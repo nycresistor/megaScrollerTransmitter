@@ -48,17 +48,20 @@ public class LEDDisplay {
   float gammaValue = 2.5;
   boolean enableGammaCorrection = false;
   boolean isRGB = false;
+  int packetsPerFrame = 2;
 
-  public LEDDisplay(PApplet parent, int w, int h, boolean isRGB, String address, int port) {
+  public LEDDisplay(PApplet parent, int w, int h, int packetsPerFrame, boolean isRGB, String address, int port) {
     this.parent = parent;
     this.udp = new UDP(parent);
     this.address = address;
     this.port = port;
     this.w = w;
     this.h = h;
+    this.packetsPerFrame = packetsPerFrame;
     this.isRGB = isRGB;
 //    int bufferSize = (isRGB ? 3 : 1)*(w*h)+1;
-    int bufferSize = (isRGB ? 3 : 1)*(w*h);
+    int bufferSize = (isRGB ? 3 : 1)*(w*h)/packetsPerFrame;
+    bufferSize = bufferSize+1; // first byte is part number
     buffer = new byte[bufferSize];
     this.addressingMode = ADDRESSING_VERTICAL_NORMAL;
     // TODO Detect this based on VERTICAL (h/2) vs. HORIZONTAL (w/2)
@@ -154,14 +157,15 @@ public class LEDDisplay {
     int r;
     int g;
     int b;
-    buffer[0] = 1;
-    for (int y=0; y<h; y++) {
-      for (int x=0; x<w; x++) {
+    int pixelsPerPacket = (w*h)/packetsPerFrame;
+    for (int p=0; p<packetsPerFrame; p++) {
+      buffer[0] = byte(p);
+      for (int offset = 0; offset<pixelsPerPacket; offset++) {
+        int idx = offset + (p*pixelsPerPacket);
 
-        if (isRGB) {
-          r = int(red(image.pixels[y*w+x]));
-          g = int(green(image.pixels[y*w+x]));
-          b = int(blue(image.pixels[y*w+x]));
+        r = int(red(image.pixels[idx]));
+        g = int(green(image.pixels[idx]));
+        b = int(blue(image.pixels[idx]));
           
           if (enableGammaCorrection) {
             r = (int)(Math.pow(r/256.0,this.gammaValue)*256*bright);
@@ -172,24 +176,13 @@ public class LEDDisplay {
 //          buffer[(getAddress(x, y)*3)+3] = byte(r);
 //          buffer[(getAddress(x, y)*3)+1] = byte(g);
 //          buffer[(getAddress(x, y)*3)+2] = byte(b);
-          
-          buffer[(getAddress(x, y)*3)+0] = byte(r);
-          buffer[(getAddress(x, y)*3)+1] = byte(g);
-          buffer[(getAddress(x, y)*3)+2] = byte(b);
-        }
-        else {
-          r = int(brightness(image.pixels[y*w+x]));
-
-          if (enableGammaCorrection) {
-            r = (int)(Math.pow(r/256.0,this.gammaValue)*256);
-          }
-
-          buffer[(getAddress(x, y)+1)] = byte(r);
-        }
+          buffer[(offset*3)+1] = byte(r);
+          buffer[(offset*3)+2] = byte(b);
+          buffer[(offset*3)+3] = byte(g);
       }
+      udp.send(buffer, address, port);
     }
     updatePixels();
-    udp.send(buffer, address, port);
   }
 }
 
