@@ -82,7 +82,7 @@ class Burst {
 
   public void draw() {
     // Draw multiple ellipses, to handle wrapping in the y direction.
-    draw_ellipse(x, y, d * (.5 -. 3 * y / displayHeight), d * 3, color(r, g ,b));
+    draw_ellipse(x, y, d * (.5 - .3 * y / displayHeight), d * 3, color(r, g ,b));
     draw_ellipse(x - displayWidth, y, d * (.5 - .3 *y / displayHeight), d * 3, color(r, g, b));
     draw_ellipse(x + displayWidth, y, d * (.5-.3 * y / displayHeight), d * 3, color(r,g,b));
 
