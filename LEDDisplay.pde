@@ -177,8 +177,8 @@ public class LEDDisplay {
 //          buffer[(getAddress(x, y)*3)+1] = byte(g);
 //          buffer[(getAddress(x, y)*3)+2] = byte(b);
           buffer[(offset*3)+1] = byte(r);
-          buffer[(offset*3)+2] = byte(b);
-          buffer[(offset*3)+3] = byte(g);
+          buffer[(offset*3)+2] = byte(g);
+          buffer[(offset*3)+3] = byte(b);
       }
       udp.send(buffer, address, port);
     }
