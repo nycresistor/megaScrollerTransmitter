@@ -11,7 +11,7 @@ int transmit_port       = 9999;
 
 // Display configuration
 int displayWidth =  16*32;
-int displayHeight = 32*1;
+int displayHeight = 32*2;
 
 boolean VERTICAL = false;
 int FRAMERATE = 30;
@@ -63,7 +63,7 @@ void setup() {
 
   frameRate(FRAMERATE);
 
-  sign = new LEDDisplay(this, displayWidth, displayHeight, true, transmit_address, transmit_port);
+  sign = new LEDDisplay(this, displayWidth, displayHeight, 2, true, transmit_address, transmit_port);
   sign.setAddressingMode(LEDDisplay.ADDRESSING_HORIZONTAL_NORMAL);  
   sign.setEnableGammaCorrection(true);
 
