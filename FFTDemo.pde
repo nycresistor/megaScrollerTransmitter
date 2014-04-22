@@ -29,14 +29,14 @@ class FFTDemo extends Routine {
       //    stroke(0,0,255);
       //    line(i, displayHeight, i, displayHeight - fft.getBand(i)*4);
       //    //line(i, displayHeight, i, displayHeight - fft.getBand(i));
-      float barHeight = fft.getBand(i)*4;
+      float barHeight = fft.getBand(i) * 4;
       for (float c = 0; c < barHeight; c++) {
-        stroke(c/barHeight*255, 0, 255);
+        stroke(c / barHeight * 255, 0, 255);
         point(i, displayHeight - c);
       }
     }
 
-    if (frame > FRAMERATE*TYPICAL_MODE_TIME) {
+    if (frame > FRAMERATE * TYPICAL_MODE_TIME) {
       newMode();
     }
   }
