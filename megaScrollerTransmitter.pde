@@ -26,7 +26,7 @@ Routine backupRoutine = null;
 Routine[] enabledRoutines = new Routine[] {
   ////new Animator("anim-nyancat",1,.5,0,0,0),
   new Bursts(), 
-  ////  new Chase(),
+  new Chase(),
   new ColorDrop(), 
   ////new FFTDemo(), 
   ////  new Greetz(),
