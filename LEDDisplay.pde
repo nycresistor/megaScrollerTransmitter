@@ -3,11 +3,11 @@ import hypermedia.net.*;
 /**
  * This class can be added to your sketches to make them compatible with an LED display.
  * Use Sketch..Add File and choose this file to copy it into your sketch.
- * 
+ *
  * void setup() {
  *   // Constructor takes this, width, height.
  *   Dacwes dacwes = new Dacwes(this, 16, 16);
- * 
+ *
  *   // Change this depending on how the sign is configured.
  *   dacwes.setAddressingMode(Dacwes.ADDRESSING_VERTICAL_FLIPFLOP);
  *
@@ -16,7 +16,7 @@ import hypermedia.net.*;
  *
  *   // The class will scale things for you, but it may not be full brightness
  *   // unless you match the size.
- *   size(320,320);  
+ *   size(320,320);
  * }
  *
  * void draw() {
@@ -128,7 +128,7 @@ public class LEDDisplay {
     }
 
     return 0;
-  }      
+  }
 
   public void sendMode(String modeName) {
     byte modeBuffer[] = new byte[modeName.length()+1];
@@ -162,7 +162,7 @@ public class LEDDisplay {
           r = int(red(image.pixels[y*w+x]));
           g = int(green(image.pixels[y*w+x]));
           b = int(blue(image.pixels[y*w+x]));
-          
+
           if (enableGammaCorrection) {
             r = (int)(Math.pow(r/256.0,this.gammaValue)*256*bright);
             g = (int)(Math.pow(g/256.0,this.gammaValue)*256*bright);
@@ -172,7 +172,7 @@ public class LEDDisplay {
 //          buffer[(getAddress(x, y)*3)+3] = byte(r);
 //          buffer[(getAddress(x, y)*3)+1] = byte(g);
 //          buffer[(getAddress(x, y)*3)+2] = byte(b);
-          
+
           buffer[(getAddress(x, y)*3)+0] = byte(r);
           buffer[(getAddress(x, y)*3)+1] = byte(g);
           buffer[(getAddress(x, y)*3)+2] = byte(b);

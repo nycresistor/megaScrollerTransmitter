@@ -15,7 +15,13 @@ class Warp extends Routine {
     warpFactor = 1;
   }
 
-  public Warp(Routine subroutine, boolean warpHorizontal, boolean warpVertical, float warpSpeed, float warpFactor) {
+  public Warp(
+    Routine subroutine,
+    boolean warpHorizontal,
+    boolean warpVertical,
+    float warpSpeed,
+    float warpFactor)
+  {
     this.subroutine = subroutine;
     this.warpHorizontal = warpHorizontal;
     this.warpVertical = warpVertical;
@@ -32,20 +38,20 @@ class Warp extends Routine {
   }
 
   void hshift(int y, int xofs) {
-    if (xofs < 0) 
+    if (xofs < 0)
       xofs = displayWidth + xofs;
 
-    PImage tmp = get(displayWidth-xofs, y, xofs, 1);
-    copy(0, y, displayWidth-xofs, 1, xofs, y, displayWidth-xofs, 1);    
+    PImage tmp = get(displayWidth - xofs, y, xofs, 1);
+    copy(0, y, displayWidth - xofs, 1, xofs, y, displayWidth - xofs, 1);
     image(tmp, 0, y);
   }
 
   void vshift(int x, int yofs) {
-    if (yofs < 0) 
+    if (yofs < 0)
       yofs = displayHeight + yofs;
 
-    PImage tmp = get(x, displayHeight-yofs, 1, yofs);
-    copy(x, 0, 1, displayHeight-yofs, x, yofs, 1, displayHeight-yofs);    
+    PImage tmp = get(x, displayHeight - yofs, 1, yofs);
+    copy(x, 0, 1, displayHeight - yofs, x, yofs, 1, displayHeight - yofs);
     image(tmp, x, 0);
   }
 
@@ -61,9 +67,9 @@ class Warp extends Routine {
       background(0);
       noFill();
       ellipseMode(RADIUS);
-      for (int i=0; i<10; i++) {
-        stroke(i%2==0 ? color(255,64,64) : color(255,128,0));
-        ellipse(displayWidth/2,displayHeight/2,i*(displayWidth/10),i*(displayHeight/10));  
+      for (int i = 0; i < 10; i++) {
+        stroke(i % 2 == 0 ? color(255, 64, 64) : color(255, 128, 0));
+        ellipse(displayWidth / 2, displayHeight / 2, i * (displayWidth / 10), i * (displayHeight / 10));
       }
     }
   }
@@ -72,18 +78,18 @@ class Warp extends Routine {
     drawBackground();
 
     if (warpVertical) {
-      for (int x=0; x<displayWidth; x++) {
-        r = x*1.0/displayHeight*PI + rofs;
-        vshift(x, int(sin(r)*(displayHeight*warpFactor)));
+      for (int x = 0; x < displayWidth; x++) {
+        r = x * 1.0 / displayHeight * PI + rofs;
+        vshift(x, int(sin(r) * (displayHeight * warpFactor)));
       }
 
       rofs += 0.0314 * warpSpeed;
     }
 
     if (warpHorizontal) {
-      for (int y=0; y<displayHeight; y++) {
-        r = y*1.0/displayWidth*PI + rofs;
-        hshift(y, int(sin(r)*(displayWidth*warpFactor)));
+      for (int y = 0; y < displayHeight; y++) {
+        r = y * 1.0 / displayWidth * PI + rofs;
+        hshift(y, int(sin(r) * (displayWidth * warpFactor)));
       }
 
       rofs += 0.0314 * warpSpeed;

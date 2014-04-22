@@ -25,7 +25,7 @@ class Pong extends Routine {
     ballFlashUntilFrame = frameCount + (long)frameRate * 3;
   }
 
-  void draw() {    
+  void draw() {
     if (frameCount < flashUntilFrame) {
       background(millis() % 255, (millis() % 255)/2, 0);
     }
@@ -75,8 +75,8 @@ class Pong extends Routine {
       paddleY++;
     }
 
-    if (paddleY > displayHeight-paddleSize) {
-      paddleY = displayHeight-paddleSize;
+    if (paddleY > displayHeight - paddleSize) {
+      paddleY = displayHeight - paddleSize;
     }
     else if (paddleY < 0) {
       paddleY = 0;
@@ -92,10 +92,10 @@ class Pong extends Routine {
     }
 
     ballX += xVec;
-    ballY += yVec; 
+    ballY += yVec;
 
     if (ballY >= displayHeight) {
-      ballY = displayHeight-1;
+      ballY = displayHeight - 1;
       bounceY();
     }
     else if (ballY < 0) {
@@ -141,18 +141,18 @@ class Pong extends Routine {
     ballX = 2;
     ballAngle = radians(45);
     deathLeft = false;
-    flashUntilFrame = frameCount + (long)frameRate*3;
-    ballFlashUntilFrame = flashUntilFrame + (long)frameRate*3;
-    
+    flashUntilFrame = frameCount + (long) frameRate * 3;
+    ballFlashUntilFrame = flashUntilFrame + (long) frameRate * 3;
+
     lives--;
   }
 
   void bounceX(float spin) {
-    ballAngle = radians(180 - degrees(ballAngle) - spin*10);
+    ballAngle = radians(180 - degrees(ballAngle) - spin * 10);
   }
 
   void bounceY() {
-    ballAngle = radians(360 - degrees(ballAngle) + (random(40)-20));
+    ballAngle = radians(360 - degrees(ballAngle) + (random(40) - 20));
   }
 }
 

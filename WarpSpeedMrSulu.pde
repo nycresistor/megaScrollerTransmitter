@@ -5,22 +5,22 @@ class WarpSpeedMrSulu extends Routine {
   void setup(PApplet parent) {
     super.setup(parent);
     warpstars = new WarpStar[NUM_STARS];
-    for (int i = 0; i<NUM_STARS; i++) {
+    for (int i = 0; i < NUM_STARS; i++) {
       warpstars[i] = new WarpStar();
     }
   }
-  
+
   void draw() {
     background(0);
     stroke(255);
-    
-    for (int i=0; i<NUM_STARS; i++) {
+
+    for (int i = 0; i < NUM_STARS; i++) {
       warpstars[i].draw();
     }
-   
-    if (frameCount - modeFrameStart > FRAMERATE*TYPICAL_MODE_TIME) {
+
+    if (frameCount - modeFrameStart > FRAMERATE * TYPICAL_MODE_TIME) {
       newMode();
-    } 
+    }
   }
 
 
@@ -33,7 +33,7 @@ class WarpStar {
   float len;
   float vy;
   float vx;
-  
+
   float r;
   float g;
   float b;
@@ -61,30 +61,30 @@ class WarpStar {
   public void draw() {
     x = x + vx;
     y = y + vy;
-    //RGB 252/23/218 
+    //RGB 252/23/218
     //r = int(map(y, 0, displayHeight, 0, 255));
     //g = 0;
     //b = 0;
     //r = 252;
     //g = 23;
     //b = 218;
-    r = random(232,255);
-    g = random(230,255);
-    b = random(230,255);
+    r = random(232, 255);
+    g = random(230, 255);
+    b = random(230, 255);
     // scale brightness.
-    float bright = random(.5,2);
-    r = r*bright;
-    g = g*bright;
-    b = b*bright;
+    float bright = random(.5, 2);
+    r = r * bright;
+    g = g * bright;
+    b = b * bright;
 
     stroke(r, g, b);
     point(x, y);
 
-    for (int i=0; i<len; i++) {
+    for (int i = 0; i < len; i++) {
       float intensity = 255 >> i / 2;
-      
-      fill(color(r*random(.8,1.3),g*random(.8,1.3),b*random(.8,1.3)));
-      stroke(color(r,g,b));
+
+      fill(color(r * random(.8, 1.3), g * random(.8, 1.3), b * random(.8, 1.3)));
+      stroke(color(r, g, b));
       //stroke(intensity);
       point(x, y - i);
     }

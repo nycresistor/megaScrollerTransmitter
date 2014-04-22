@@ -29,8 +29,8 @@ import netP5.*;
 
 class WiiController {
   WiiController singleton = null;
-  
-  OscP5 osc;  
+
+  OscP5 osc;
   boolean buttonA, buttonB, buttonUp, buttonDown, buttonLeft, buttonRight;
   boolean buttonOne, buttonTwo, buttonMinus, buttonPlus, buttonHome,buttonC,buttonZ;
   boolean isConnected;
@@ -55,7 +55,7 @@ class WiiController {
   WiiController() {
     // by default darwiinremoteOSC sends OSC messages to port 5600
     osc = new OscP5(this,5600);
-    
+
     // the address and the port of darwiinremoteOSC
     remoteAddress = "127.0.0.1";
     remotePort = 5601;
@@ -64,7 +64,7 @@ class WiiController {
     acc = new Acceleration();
     nAcc = new Acceleration();
     ir = new IRdata[4];
-    
+
     // Darwiin messages
     osc.plug(this,"connected","/wii/connected");// i
     osc.plug(this,"mousemode","/wii/mousemode");// i
@@ -105,19 +105,19 @@ class WiiController {
     osc.plug(this,"wiiosc_accY",        "/wii/acc/y");// i
     osc.plug(this,"wiiosc_accZ",        "/wii/acc/z");// i
   }
-  
+
   void wiiosc_accX(int id, float value) {
     // value goes from .4 (-90) to .6 (90)
     acc.x = (value-.5)*10;
   }
-  
+
   void wiiosc_accY(int id, float value) {
     acc.y = (value-.5)*10;
   }
-  
+
   void wiiosc_accZ(int id, float value) {
     acc.z = (value-.5)*10;
-    
+
     pitch = (float) Math.atan2(acc.y, acc.z)*(180/3.14);
     roll = (float) Math.atan2(acc.x, acc.z)*(180/3.14);
   }
@@ -125,8 +125,8 @@ class WiiController {
   void connected(int theValue) {
     isConnected = (theValue==0) ? false:true;
   }
-  
-  
+
+
   void oscEvent(OscMessage theOscMessage) {
     if(theOscMessage.checkAddrPattern("/framerate")==true) {
       if(theOscMessage.checkTypetag("i")) {
@@ -141,14 +141,14 @@ class WiiController {
       }
     }
   }
-  
-  
+
+
   void acceleration(float theX, float theY, float theZ) {
     acc.x = theX;
     acc.y = theY;
     acc.z = theZ;
     if(DEBUG) {
-      println("acceleration  x:"+acc.x+" y:"+acc.y+"  z:"+acc.z);  
+      println("acceleration  x:"+acc.x+" y:"+acc.y+"  z:"+acc.z);
     }
   }
 
@@ -161,12 +161,12 @@ class WiiController {
   }
 
 
-  // darwiinremoteOSC sends 12 floats containing the x,y and size values for 
+  // darwiinremoteOSC sends 12 floats containing the x,y and size values for
   // 4 IR spots the wiimote can sense. values are between 0 and 1 for x and y
-  // values for size are 0 and bigger. if the size is 15 or 0, the IR point is not 
+  // values for size are 0 and bigger. if the size is 15 or 0, the IR point is not
   // recognized by the wiimote.
   void ir(
-  float f10, float f11,float f12, 
+  float f10, float f11,float f12,
   float f20,float f21, float f22,
   float f30, float f31, float f32,
   float f40, float f41, float f42
@@ -207,7 +207,7 @@ class WiiController {
       println("NUNCHUCK orientation roll:"+roll+"   pitch:"+pitch);
     }
   }
-  
+
   void wiiosc_buttonA    (int id, int theValue) {buttonA    (theValue);}
   void wiiosc_buttonB    (int id, int theValue) {buttonB    (theValue);}
   void wiiosc_buttonOne  (int id, int theValue) {buttonOne  (theValue);}
@@ -222,8 +222,8 @@ class WiiController {
 
 //  void wiiosc_accX (int id, int theValue) {acc.x = theX;}
 //  void wiiosc_accY (int id, int theValue) {}
-//  void wiiosc_accZ (int id, int theValue) {buttonHome (theValue);}  
-  
+//  void wiiosc_accZ (int id, int theValue) {buttonHome (theValue);}
+
   void buttonA(int theValue) {
     buttonA = (theValue==1) ? true:false;
   }
@@ -250,7 +250,7 @@ class WiiController {
 
   void buttonUp(int theValue) {
     buttonUp = (theValue==1)  ? true:false;
-    
+
     if(buttonUp) {
       bright = min(1,bright + .1);
     }
@@ -263,10 +263,10 @@ class WiiController {
       bright = max(.1,bright - .1);
     }
   }
-  
+
   void buttonLeft(int theValue) {
     buttonLeft = (theValue==1)  ? true:false;
-    
+
     if (buttonLeft) {
       frameRate(max(15,frameRate - 5));
     }
@@ -274,7 +274,7 @@ class WiiController {
 
   void buttonRight(int theValue) {
     buttonRight = (theValue==1) ? true:false;
-    
+
     // make faster
     if (buttonRight) {
       frameRate(min(150,frameRate + 5));
@@ -302,7 +302,7 @@ class WiiController {
   void requestBatterylevel() {
     osc.send("/wii/batterylevel",new Object[] {},remoteAddress,remotePort);
   }
-  
+
   void forcefeedback(boolean theFlag) {
     int n = 0;
     if(theFlag) {
@@ -310,7 +310,7 @@ class WiiController {
     }
     osc.send("/wii/forcefeedback",new Object[] {new Integer(n)  },remoteAddress,remotePort);
   }
-  
+
   void led(int[] n) {
       osc.send("/wii/led",new Object[] { new Integer(n[0]), new Integer(n[1]),new Integer(n[2]),new Integer(n[3])},remoteAddress,remotePort);
   }
