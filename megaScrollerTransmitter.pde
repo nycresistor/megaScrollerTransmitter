@@ -5,7 +5,7 @@ import java.io.*;
 
 // This should be 127.0.0.1, 58802
 //String transmit_address = "192.168.8.2";
-String transmit_address = "127.0.0.1";
+String transmit_address = "192.168.1.136";
 int transmit_port       = 9999;
 
 
@@ -25,16 +25,16 @@ Routine backupRoutine = null;
 
 Routine[] enabledRoutines = new Routine[] {
   ////new Animator("anim-nyancat",1,.5,0,0,0),
+  new Waves(),
+  new ColorDrop(), 
   new Bursts(), 
   ////  new Chase(),
-  new ColorDrop(), 
   ////new FFTDemo(), 
   ////  new Greetz(),
   new RGBRoutine(), 
   ////new RainbowColors(), 
   //new Warp(null, true, false, 0.5, 0.5), 
   new Warp(new WarpSpeedMrSulu(), false, true, 0.5, 0.5), 
-  new Waves(),
 };
 
 int w = 0;
@@ -63,7 +63,7 @@ void setup() {
 
   frameRate(FRAMERATE);
 
-  sign = new LEDDisplay(this, displayWidth, displayHeight, 2, true, transmit_address, transmit_port);
+  sign = new LEDDisplay(this, displayWidth, displayHeight, 8, true, transmit_address, transmit_port);
   sign.setAddressingMode(LEDDisplay.ADDRESSING_HORIZONTAL_NORMAL);  
   sign.setEnableGammaCorrection(true);
 

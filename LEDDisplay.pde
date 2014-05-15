@@ -62,6 +62,7 @@ public class LEDDisplay {
 //    int bufferSize = (isRGB ? 3 : 1)*(w*h)+1;
     int bufferSize = (isRGB ? 3 : 1)*(w*h)/packetsPerFrame;
     bufferSize = bufferSize+1; // first byte is part number
+    println("buffersize ",bufferSize);
     buffer = new byte[bufferSize];
     this.addressingMode = ADDRESSING_VERTICAL_NORMAL;
     // TODO Detect this based on VERTICAL (h/2) vs. HORIZONTAL (w/2)
@@ -70,6 +71,7 @@ public class LEDDisplay {
     for (int i=0; i<bufferSize; i++) {
       buffer[i] = 0;
     }
+    sendPacketsPerFrame(packetsPerFrame);
   }
 
   public void setAddress(String address) {
@@ -133,6 +135,13 @@ public class LEDDisplay {
     return 0;
   }
 
+  public void sendPacketsPerFrame(int ppf) {
+    byte buf[] = new byte[2];
+    buf[0] = (byte)0xff;
+    buf[1] = (byte)ppf;
+    udp.send(buf, address, port);
+  }
+    
   public void sendMode(String modeName) {
     byte modeBuffer[] = new byte[modeName.length()+1];
 
